@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 14:16:23 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/03 15:43:48 by soemin           ###   ########.fr       */
+/*   Updated: 2025/09/03 16:32:47 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -20,9 +20,6 @@ int	ft_pwd(void)
 		printf("%s\n", cwd);
 		return (0);
 	}
-	else
-	{
-		perror("pwd");
-		return (1);
-	}
+	perror("pwd");
+	return (1);
 }
