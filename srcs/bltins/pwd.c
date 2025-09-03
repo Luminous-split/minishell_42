@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/03 13:48:34 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/03 14:12:40 by soemin           ###   ########.fr       */
+/*   Created: 2025/09/03 14:16:23 by soemin            #+#    #+#             */
+/*   Updated: 2025/09/03 15:43:48 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "minishell.h"
 
-volatile sig_atomic_t	g_signal = 0;
-
-int	main(int ac, int av, char **envp)
+int	ft_pwd(void)
 {
-	(void)ac;
-	(void)av;
+	char	cwd[4096];
 
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+	{
+		printf("%s\n", cwd);
+		return (0);
+	}
+	else
+	{
+		perror("pwd");
+		return (1);
+	}
+}
