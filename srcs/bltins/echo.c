@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 15:44:40 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/03 16:22:31 by soemin           ###   ########.fr       */
+/*   Updated: 2025/09/22 18:42:57 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -38,7 +38,6 @@ int	ft_echo(char **args)
 
 	i = 1;
 	n_flag = 0;
-
 	while (args[i] && is_n_flag(args[i]))
 	{
 		n_flag = 1;
