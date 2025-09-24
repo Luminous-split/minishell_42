@@ -20,7 +20,11 @@ SRCS = srcs/main.c \
        srcs/bltins/run_bltins.c \
        srcs/utils/env_utils.c \
        srcs/utils/signal.c \
+
 OBJS = $(SRCS:.c=.o)
+
+%.o:%.c
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 LIBFT = libft/libft.a
 LIBFT_DIR = libft
@@ -28,9 +32,9 @@ LIBFT_DIR = libft
 all : $(NAME)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(LIBFT) $(LDFLAGS) $(OBJS) -o $(NAME)
 
-$(LIBFT)
+$(LIBFT):
 	make -C $(LIBFT_DIR)
 
 fclean : clean

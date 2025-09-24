@@ -12,8 +12,10 @@
 
 #include "minishell.h"
 
-int	main(int ac, int av, char **envp)
+int	main(int ac, char **av, char **envp)
 {
 	(void)ac;
 	(void)av;
-
+	(void)envp;
+	ft_putstr_fd("Hello", 1);
+}

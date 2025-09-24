@@ -24,7 +24,7 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "libft.h"
+# include "../libft/libft.h"
 
 // Global Variable for received signal
 extern char	**environ;

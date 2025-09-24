@@ -70,7 +70,7 @@ bonus: $(OBJ_B)
 	@ranlib $(NAME)
 
 all: $(NAME)
-	
+
 clean:
 	@/bin/rm -f $(OBJ) $(OBJ_B)
 
