@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 18:33:25 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/22 18:33:26 by soemin           ###   ########.fr       */
+/*   Updated: 2025/09/29 17:50:10 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,28 +40,6 @@ static int	parse_exit_code(const char *str, int *valid)
 	return (code);
 }
 
-void	exit_prompt(int code)
-{
-	char	*line;
-	char	*home;
-
-	while (1)
-	{
-		line = readline("");
-		if (!line)
-			exit(code);
-		if (line[0] == '\0')
-		{
-			home = getenv("HOME");
-			if (home && chdir(home) == -1)
-				perror("cd");
-			free(line);
-			return ;
-		}
-		free(line);
-	}
-}
-
 static int	validate_exit_args(char **args, int last_status, int *code)
 {
 	int	valid;
@@ -70,10 +48,6 @@ static int	validate_exit_args(char **args, int last_status, int *code)
 		exit(last_status);
 	if (!is_num(args[1]))
 	{
-		printf("logout\nexit: %s: numeric argument required\n\n", args[1]);
-		printf("[process exited with code 2 (0x00000002)]\n");
-		printf("You can now close minishell with Ctrl+D,");
-		printf(" or press Enter to restart.\n");
 		exit_prompt(2);
 		return (0);
 	}
@@ -97,14 +71,5 @@ int	ft_exit(char **args, int last_status)
 
 	if (!validate_exit_args(args, last_status, &code))
 		return (1);
-	if (code != 0)
-	{
-		printf("logout\n\n");
-		printf("[process exited with code %d (0x%08x)]\n", code, code);
-		printf("You can now close minishell with Ctrl+D,");
-		printf(" or press Enter to restart.\n");
-		exit_prompt(code);
-		return (-1);
-	}
 	exit(code);
 }

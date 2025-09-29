@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 20:29:19 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/22 20:29:21 by soemin           ###   ########.fr       */
+/*   Updated: 2025/09/29 17:47:28 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ extern char	**environ;
 //FUNCTIONS
 
 // parser
+char	*ft_strtok(char *str, const char *delim);
 
 // exec
 

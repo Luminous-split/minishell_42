@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 13:48:34 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/29 16:06:20 by soemin           ###   ########.fr       */
+/*   Updated: 2025/09/29 18:05:50 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,11 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (*line)
 			add_history(line);
-		args = // parsing function
+		args = // parsing function split_line(line, last status);
 		if (is_builtin(args))
 			run_builtin(args, envp, var_name, last_status);
+		else if (strchr(args, '|'));
+				run_pipes();
 		else
 			run_binary(args);
 		free(args);

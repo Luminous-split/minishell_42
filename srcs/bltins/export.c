@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 19:46:45 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/29 15:36:38 by soemin           ###   ########.fr       */
+/*   Updated: 2025/09/29 17:55:56 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -18,11 +18,11 @@ static int	is_valid_identifier(const char *name)
 	p = name + 1;
 	if (!name || !*name)
 		return (0);
-	if (!(isalpha((unsigned char)name[0]) || name[0] == '_'))
+	if (!(ft_isalpha((unsigned char)name[0]) || name[0] == '_'))
 		return (0);
 	while (*p)
 	{
-		if (!(isalnum((unsigned char)*p) || *p == '_'))
+		if (!(ft_isalnum((unsigned char)*p) || *p == '_'))
 			return (0);
 		p++;
 	}
@@ -51,6 +51,7 @@ static int	export_var(const char *token)
 	value = eq + 1;
 	if (!is_valid_identifier(name))
 	{
+		printf("minishell: export: '%s': is not a valid identifier", name);
 		free(name);
 		return (1);
 	}

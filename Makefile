@@ -20,6 +20,7 @@ SRCS = srcs/main.c \
        srcs/bltins/run_bltins.c \
        srcs/utils/env_utils.c \
        srcs/utils/signal.c \
+       srcs/parser/ft_strtok.c \
 
 OBJS = $(SRCS:.c=.o)
 
