@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 20:29:19 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/29 17:47:28 by soemin           ###   ########.fr       */
+/*   Updated: 2025/09/29 18:21:25 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ extern char	**environ;
 char	*ft_strtok(char *str, const char *delim);
 
 // exec
+int	run_binary(char **args);
 
 // built-in cmds
 int		ft_echo(char **args);

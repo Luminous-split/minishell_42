@@ -21,6 +21,7 @@ SRCS = srcs/main.c \
        srcs/utils/env_utils.c \
        srcs/utils/signal.c \
        srcs/parser/ft_strtok.c \
+       srcs/exec/run_binary.c
 
 OBJS = $(SRCS:.c=.o)
 
