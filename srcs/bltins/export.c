@@ -6,16 +6,10 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 19:46:45 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/22 20:02:09 by soemin           ###   ########.fr       */
+/*   Updated: 2025/09/29 15:36:38 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
-
-char	**g_env;
-int		g_last_status;
-
-g_env = NULL;
-g_last_status = 0;
 
 static int	is_valid_identifier(const char *name)
 {
@@ -66,12 +60,11 @@ static int	export_var(const char *token)
 		free(name);
 		return (1);
 	}
-	g_env = environ;
 	free(name);
 	return (0);
 }
 
-int	ft_export(char **args)
+int	ft_export(char **args, int *last_status)
 {
 	int		status;
 	int		i;
@@ -94,6 +87,6 @@ int	ft_export(char **args)
 			status = 1;
 		i++;
 	}
-	g_last_status = status;
+	last_status = status;
 	return (status);
 }
