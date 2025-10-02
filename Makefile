@@ -21,6 +21,9 @@ SRCS = srcs/main.c \
        srcs/utils/env_utils.c \
        srcs/utils/signal.c \
        srcs/parser/ft_strtok.c \
+       srcs/parser/dollar.c \
+       srcs/parser/single_quote.c \
+       srcs/parser/double_quote.c \
        srcs/exec/run_binary.c
 
 OBJS = $(SRCS:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 20:29:19 by soemin            #+#    #+#             */
-/*   Updated: 2025/10/02 13:45:32 by soemin           ###   ########.fr       */
+/*   Updated: 2025/10/02 17:13:02 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ typedef struct s_list_cmds
 
 // parser
 char	*ft_strtok(char *str, const char *delim);
+void	expand_dollar(const char *line, char *tok, char **envp, int last_status);
+char    *handle_single_quotes(const char *line, int start, char *tok);
+char    *handle_double_quotes(const char *line, int start, char **envp, int last_status);
 
 // exec
 int	run_binary(char **args, char **envp);
