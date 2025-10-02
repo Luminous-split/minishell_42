@@ -16,24 +16,41 @@ char	*ft_strtok(char *str, const char *delim)
 {
 	static char	*saveptr;
 	char		*tok;
+	char		*temp;
+	int		index;
 
 	if (str != NULL)
 		saveptr = str;
 	if (saveptr == NULL)
 		return (NULL);
-	while (*saveptr && strchr(delim, *saveptr))
-		saveptr++;
-	if (*saveptr == '\0')
-		saveptr = NULL;
-	tok = saveptr;
-	while (*saveptr && !strchr(delim, *saveptr))
-		saveptr++;
-	if (*saveptr)
+	temp = strstr(saveptr, delim);
+	if (temp)
 	{
-		*saveptr = '\0';
-		saveptr++;
+		index = temp - saveptr;
+		memset(temp, '\0', strlen(delim));
+		tok = saveptr;
+		saveptr = temp + strlen(delim);
+		if (*saveptr  == '\0')
+			saveptr = NULL;
 	}
 	else
+	{
+		tok = saveptr;
 		saveptr = NULL;
+	}
 	return (tok);
 }
+
+/*
+int	main()
+{
+	char str[] = "export name=soemin";
+
+	char *out = ft_strtok(str, "=");
+	while (out)
+	{
+		printf("%s\n", out);
+		out = ft_strtok(NULL, "=");
+	}
+}
+*/
