@@ -6,20 +6,35 @@
 /*   By: ksan <ksan@student.42.sg>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 16:34:46 by ksan              #+#    #+#             */
-/*   Updated: 2025/09/29 16:40:50 by ksan             ###   ########.sg       */
+/*   Updated: 2025/10/02 13:18:51 by ksan             ###   ########.sg       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*parse_line(char *line)
+t_list_args	*cmd_parse(char *line, int *cmd_count)
 {
-	char **cmds;
+	t_list_args	*cmds;
+	t_list_args	cmd;
+	int			next_size;
 
 	cmds = NULL;
-	if (ft_strtok("", "|"))
-		pass ;
-	else
-		cmds = ft_split(line, " ");
-	return cmds;
+	cmd_str = ft_strtok(line, "|");
+	while (cmd_str)
+	{
+		cmd.args = ft_split(argv[cmd_start], ' '); //split and unpack
+		if (cmd.args[0] == NULL)
+		{
+			free(cmd.args);
+			cmd.args = malloc(sizeof(char *) * 2);
+			cmd.args[0] = ft_strdup(argv[cmd_start]);
+			cmd.args[1] = NULL;
+		}
+		trim_cmdargs(cmd.args);
+		next_size = ((*cmd_count) + 1) * sizeof(t_list_args);
+		cmds = ft_realloc(cmds, (*cmd_count) * sizeof(t_list_args), next_size);
+		cmds[(*cmd_count)++] = cmd;
+		cmd_str = ft_strtok(NULL, "|");
+	}
+	return (cmds);
 }

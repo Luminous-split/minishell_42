@@ -26,6 +26,11 @@
 # include <readline/history.h>
 # include "../libft/libft.h"
 
+typedef struct s_list_cmds
+{
+	char	**cmds;
+}	t_list_cmds;
+
 // Global Variable for received signal
 
 //FUNCTIONS
