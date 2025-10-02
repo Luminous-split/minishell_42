@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 20:29:19 by soemin            #+#    #+#             */
-/*   Updated: 2025/10/02 17:13:02 by soemin           ###   ########.fr       */
+/*   Updated: 2025/10/02 18:54:39 by ksan             ###   ########.sg       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ char	*ft_strtok(char *str, const char *delim);
 void	expand_dollar(const char *line, char *tok, char **envp, int last_status);
 char    *handle_single_quotes(const char *line, int start, char *tok);
 char    *handle_double_quotes(const char *line, int start, char **envp, int last_status);
+
+void		parse_path(t_list_args *cmds, char **envp, int count);
+t_list_cmds     *cmd_parse(int argc, char *argv[], int cmd_start, int *cmd_count);
+void		*ft_realloc(void *ptr, size_t old_size, size_t new_size);
+void            free_all(t_list_cmds *cmds, int count);
 
 // exec
 int	run_binary(char **args, char **envp);
