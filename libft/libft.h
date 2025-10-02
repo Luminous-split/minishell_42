@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 22:13:26 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/22 20:05:09 by soemin           ###   ########.fr       */
+/*   Updated: 2025/10/02 13:55:18 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int		ft_toupper(int c);
 int		ft_tolower(int c);
 size_t	ft_strlen(const char *str);
 int		ft_atoi(const char *str);
+char	*ft_strcpy(char *dest, const char *src);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 size_t	ft_strlcat(char *dst, const char *src, size_t size);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);

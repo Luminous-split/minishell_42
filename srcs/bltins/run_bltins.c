@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 18:48:28 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/29 18:07:56 by soemin           ###   ########.fr       */
+/*   Updated: 2025/10/02 13:32:00 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -32,23 +32,23 @@ int	is_builtin(char **av)
 	return (0);
 }
 
-int	run_builtin(char **args, char **envp, char *var_name, int last_status)
+int	run_builtin(char **args, char ***envp, int last_status)
 {
 	if (!args || !args[0])
 		return (0);
 	if (ft_strncmp(args[0], "pwd", 3) == 0 && args[0][3] == '\0')
 		return (ft_pwd());
 	if (ft_strncmp(args[0], "env", 3) == 0 && args[0][3] == '\0')
-		return (ft_env(args, envp));
+		return (ft_env(args, *envp));
 	if (ft_strncmp(args[0], "echo", 4) == 0 && args[0][4] == '\0')
 		return (ft_echo(args));
 	if (ft_strncmp(args[0], "exit", 4) == 0 && args[0][4] == '\0')
 		return (ft_exit(args, last_status));
 	if (ft_strncmp(args[0], "cd", 2) == 0 && args[0][2] == '\0')
-		return (ft_cd(args, envp));
+		return (ft_cd(args, *envp));
 	if (ft_strncmp(args[0], "export", 6) == 0 && args[0][6] == '\0')
-		return (ft_export(args));
+		return (ft_export(args, envp, &last_status));
 	if (ft_strncmp(args[0], "unset", 5) == 0 && args[0][5] == '\0')
-		return (ft_unset(args, var_name));
-	return (1);
+		return (ft_unset(args, envp));
+	return (0);
 }

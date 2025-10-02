@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 19:46:45 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/29 17:55:56 by soemin           ###   ########.fr       */
+/*   Updated: 2025/10/02 12:41:21 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -29,12 +29,10 @@ static int	is_valid_identifier(const char *name)
 	return (1);
 }
 
-static int	export_var(const char *token)
+static int	parse_token(const char *token, char **name, const char **value)
 {
 	const char	*eq;
 	size_t		name_len;
-	char		*name;
-	const char	*value;
 
 	eq = ft_strchr(token, '=');
 	if (!eq)
@@ -42,49 +40,64 @@ static int	export_var(const char *token)
 	name_len = eq - token;
 	if (name_len == 0)
 		return (1);
-	name = ft_strndup(token, name_len);
-	if (!name)
+	*name = ft_strndup(token, name_len);
+	if (!*name)
 	{
 		perror("strndup");
 		return (1);
 	}
-	value = eq + 1;
-	if (!is_valid_identifier(name))
-	{
-		printf("minishell: export: '%s': is not a valid identifier", name);
-		free(name);
-		return (1);
-	}
-	if (set_env_var(name, value, 1) != 0)
-	{
-		perror("setenv");
-		free(name);
-		return (1);
-	}
-	free(name);
+	*value = eq + 1;
 	return (0);
 }
 
-int	ft_export(char **args, int *last_status)
+static int	export_var(const char *token, char ***envp)
+{
+	char		*name;
+	const char	*value;
+	int			status;
+
+	name = NULL;
+	value = NULL;
+	status = 0;
+	if (parse_token(token, &name, &value) != 0)
+		return (1);
+	if (!name)
+		return (0);
+	if (!is_valid_identifier(name))
+	{
+		printf("minishell: export: '%s': is not a valid identifier", name);
+		status = 1;
+	}
+	if (ft_setenv(envp, name, value) != 0)
+	{
+		perror("setenv");
+		status = 1;
+	}
+	free(name);
+	return (status);
+}
+
+int	ft_export(char **args, char ***envp, int *last_status)
 {
 	int		status;
 	int		i;
-	char	**e;
 
 	status = 0;
 	if (!args[1])
 	{
-		*e = environ;
-		while (e && *e)
+		i = 0;
+		while ((*envp)[i])
 		{
 			printf("declare -x %s\n", *e);
-			return (0);
+			i++;
 		}
+		*last_status = 0;
+		return (0);
 	}
 	i = 1;
 	while (args[i])
 	{
-		if (export_var(args[i]) != 0)
+		if (export_var(args[i], envp) != 0)
 			status = 1;
 		i++;
 	}

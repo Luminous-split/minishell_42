@@ -6,34 +6,110 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 16:26:34 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/22 19:20:53 by soemin           ###   ########.fr       */
+/*   Updated: 2025/10/02 13:47:49 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-void	set_env_var(char **env, const char *name, const char *value)
+static int	append_env(char ***envp, char *new_entry)
 {
-	size_t	len;
-	size_t	total_len;
-	char    *updated_var;
-	int		i;
+	int		count;
+	char	**tmp;
 
-	len = ft_strlen(name);
-	i = 0;
-	while (env[i])
+	count = 0;
+	while ((*envp)[count])
+		count++;
+	*tmp = realloc(*envp, sizeof(char *) * (count + 2));
+	if (!tmp)
 	{
-		if (ft_strncmp(env[i], name, len) == 0 && env[i][len] == '=')
+		free(new_entry);
+		return (1);
+	}
+	*envp = tmp;
+	(*envp)[count] = new_entry;
+	(*envp)[count + 1] = NULL;
+	return (0);
+}
+
+static char	*make_env_entry(const char *name, const char *value)
+{
+	size_t	len_name;
+	size_t	len_value;
+	char	*entry;
+
+	len_name = ft_strlen(name);
+	len_value = ft_strlen(value);
+	if (!entry)
+		return (NULL);
+	ft_strcpy(entry, name);
+	entry[len_name] = '=';
+	ft_strcpy(entry + len_name + 1, value);
+	return (entry);
+}
+
+int	ft_setenv(char ***envp, const char *name, const char *value)
+{
+	char	*new_entry;
+	int		i;
+	size_t	len_name;
+
+	new_entry = make_env_entry(name, value);
+	if (!new_entry)
+		return (1);
+	i = 0;
+	len_name = ft_strlen(name);
+	while ((*envp)[i])
+	{
+		if (ft_strncmp((*envp)[i], name, len_name) == 0
+				&& (*envp)[i][len_name] == '=')
 		{
-			total_len = len + 1 + ft_strlen(value) + 1;
-			updated_var = malloc(total_len);
-			if (!updated_var)
-				return ;
-			ft_strlcpy(updated_var, name, total_len);
-			ft_strlcat(updated_var, "=", total_len);
-			ft_strlcat(updated_var, value, total_len);
-			env[i] = updated_var;
-			return ;
+			free((*envp)[i]);
+			(*envp)[i] = new_entry;
+			return (0);
 		}
 		i++;
 	}
+	return (append_env(envp, new_entry));
+}
+
+char	*get_path_value(char **evnp)
+{
+	int	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		if ((ft_strncmp(envp[i]), "PATH=", 5) == 0)
+			return (envp[i] + 5);
+		i++;
+	}
+	return (NULL);
+}
+
+char	**dup_env(char **envp)
+{
+	int		count;
+	char	**cpy;
+	int		i;
+
+	count = 0;
+	while (envp[count])
+		count++;
+	*cpy = malloc((count + 1) * sizeof(char *));
+	if (!cpy)
+		return (NULL);
+	i = 0;
+	while (i < count)
+	{
+		cpy[i] = ft_strdup(envp[i]);
+		if (!cpy[i])
+		{
+			while (--i >= 0)
+				free(cpy[i]);
+			free(cpy);
+			return (NULL);
+		}
+	}
+	cpy[count] = NULL;
+	return (cpy);
 }

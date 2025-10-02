@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 18:33:25 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/29 17:50:10 by soemin           ###   ########.fr       */
+/*   Updated: 2025/10/02 12:31:15 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,22 +45,25 @@ static int	validate_exit_args(char **args, int last_status, int *code)
 	int	valid;
 
 	if (!args[1])
-		exit(last_status);
+	{
+		*code = last_status;
+		return (1);
+	}
 	if (!is_num(args[1]))
 	{
-		exit_prompt(2);
-		return (0);
+		*code = 2;
+		return (1);
 	}
 	if (args[2])
 	{
-		printf("logout\nexit: too many arguments\n");
+		printf("minshell: exit: too many arguments\n");
 		return (0);
 	}
 	*code = parse_exit_code(args[1], &valid);
 	if (!valid)
 	{
-		printf("exit: %s: numeric argument required\n", args[1]);
-		exit(2);
+		*code = 2;
+		return (1);
 	}
 	return (1);
 }
