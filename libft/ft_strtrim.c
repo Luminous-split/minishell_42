@@ -3,38 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: ksan <ksan@student.42.sg>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/07 22:12:11 by soemin            #+#    #+#             */
-/*   Updated: 2025/05/08 22:30:20 by soemin           ###   ########.fr       */
+/*   Created: 2025/05/17 13:29:10 by ksan              #+#    #+#             */
+/*   Updated: 2025/05/17 13:29:10 by ksan             ###   ########.sg       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+static int	ft_isset(char c, char const *set);
+
+char		*ft_strtrim(char const *s1, char const *set);
+
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	size_t	start;
-	size_t	end;
+	size_t	s1_len;
+	size_t	head;
+	size_t	tail;
+	char	*trimmed_str;
+	size_t	trimmed_slen;
 
-	start = 0;
 	if (!s1 || !set)
 		return (NULL);
-	while (s1[start] && ft_strchr(set, s1[start]))
-		start++;
-	end = ft_strlen(s1);
-	while (end > start && ft_strchr(set, s1[end - 1]))
-		end--;
-	return (ft_substr(s1, start, end - start));
+	s1_len = ft_strlen(s1);
+	head = 0;
+	while (s1[head] != '\0' && ft_isset(s1[head], set))
+		head++;
+	tail = s1_len - 1;
+	while (tail >= head && ft_isset(s1[tail], set))
+		tail--;
+	trimmed_slen = tail - head + 1;
+	trimmed_str = (char *)malloc(sizeof(char) * (trimmed_slen + 1));
+	if (!trimmed_str)
+		return (NULL);
+	ft_memcpy(trimmed_str, s1 + head, trimmed_slen);
+	trimmed_str[trimmed_slen] = '\0';
+	free((char *)s1);
+	return (trimmed_str);
 }
-/*
-#include <stdio.h>
-int main(void)
+
+static int	ft_isset(char c, char const *set)
 {
-    const char *str1 = "   Hello, world!   ";
-    const char *set1 = " ";
-    char *result1 = ft_strtrim(str1, set1);
-    printf("Test 1: ft_strtrim(\"%s\", \" \") = \"%s\"\n", str1, result1);
-    return (0);
+	while (*set)
+	{
+		if (*set == c)
+			return (1);
+		set++;
+	}
+	return (0);
 }
-*/
