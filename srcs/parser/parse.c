@@ -79,25 +79,20 @@ t_list_cmds	*cmd_parse(char *line)
 	t_list_cmds	cmd;
 	int			next_size;
 	int			cmd_count;
+	char			*cmd_str;
 
-	cmds = NULL;
+//	cmds = NULL; norm
 	cmd_count = 0;
-	cmd_str = ft_strtok(line, "|");
+	cmd_str = next_pipe_token(line);
 	while (cmd_str)
 	{
 		cmd.args = ft_split(line, ' '); //split and unpack
-		if (cmd.args[0] == NULL)
-		{
-			free(cmd.args);
-			cmd.args = malloc(sizeof(char *) * 2);
-			cmd.args[0] = ft_strdup(argv[cmd_start]);
-			cmd.args[1] = NULL;
-		}
 		trim_cmdargs(cmd.args);
 		next_size = (cmd_count + 1) * sizeof(t_list_cmds);
 		cmds = ft_realloc(cmds, (*cmd_count) * sizeof(t_list_cmds), next_size);
 		cmds[cmd_count++] = cmd;
-		cmd_str = ft_strtok(NULL, "|");
+		free(cmd_str);
+		cmd_str = next_pipe_token(NULL);
 	}
 	return (cmds);
 }

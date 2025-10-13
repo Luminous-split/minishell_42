@@ -24,7 +24,7 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "../libft/libft.h"
+# include "libft.h"
 
 typedef struct s_list_cmds
 {
@@ -41,10 +41,11 @@ void	expand_dollar(const char *line, char *tok, char **envp, int last_status);
 char    *handle_single_quotes(const char *line, int start, char *tok);
 char    *handle_double_quotes(const char *line, int start, char **envp, int last_status);
 
-void		parse_path(t_list_args *cmds, char **envp, int count);
-t_list_cmds     *cmd_parse(int argc, char *argv[], int cmd_start, int *cmd_count);
+void		parse_path(t_list_cmds *cmds, char **envp, int count);
+t_list_cmds     *cmd_parse(char *line);
 void		*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 void            free_all(t_list_cmds *cmds, int count);
+char		*next_pipe_token(char *str);
 
 // exec
 int	run_binary(char **args, char **envp);

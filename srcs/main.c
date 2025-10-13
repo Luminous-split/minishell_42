@@ -15,10 +15,9 @@
 int	main(int ac, char **av, char **envp)
 {
 	char	*line;
-	char	**args;
 	int		last_status;
-	char	**my_env;
-	t_list_args	*cmds;
+//	char	**my_env;
+	t_list_cmds	*cmds;
 	int	cmd_count;
 
 	(void)ac;
@@ -28,7 +27,7 @@ int	main(int ac, char **av, char **envp)
 	cmds = NULL;
 	cmd_count = 0;
 	last_status = 0;
-	*my_env = dup_env(envp);
+//	my_env = dup_env(envp);
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -39,13 +38,12 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (*line)
 			add_history(line);
-		if (is_builtin(args))
-			run_builtin(args, &envp, last_status);
-		else if (strchr(args, '|'))
-			cmds = cmd_parse(line, 0);
-		else
-			run_binary(args, my_env);
-		free(args);
+//		if (is_builtin(args))
+//			run_builtin(args, &envp, last_status);
+		else if (ft_strchr(line, '|'))
+			cmds = cmd_parse(line);
+//		else
+//			run_binary(args, my_env);
 		free(line);
 	}
 	return (0);
