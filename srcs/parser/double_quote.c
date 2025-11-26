@@ -6,14 +6,15 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 16:35:18 by soemin            #+#    #+#             */
-/*   Updated: 2025/10/02 17:00:36 by soemin           ###   ########.fr       */
+/*   Updated: 2025/11/23 19:49:22 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "minishell.h"
 
-char	*handle_double_quotes(const char *line, int start, char **envp, int last_status)
+char	*hand_dq(const char *line, int start, char **envp, int last_status)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	*tok;
 
 	i = start;

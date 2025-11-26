@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 13:48:34 by soemin            #+#    #+#             */
-/*   Updated: 2025/10/02 18:36:34 by ksan             ###   ########.sg       */
+/*   Updated: 2025/11/26 18:17:35 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,18 @@
 int	main(int ac, char **av, char **envp)
 {
 	char	*line;
-	int		last_status;
+//	int		last_status;
 //	char	**my_env;
-	t_list_cmds	*cmds;
-	int	cmd_count;
+//	t_list_cmds	*cmds;
+//	int	cmd_count;
 
 	(void)ac;
 	(void)av;
 	(void)envp;
 
-	cmds = NULL;
-	cmd_count = 0;
-	last_status = 0;
+//	cmds = NULL;
+//	cmd_count = 0;
+//	last_status = 0;
 //	my_env = dup_env(envp);
 	while (1)
 	{
@@ -41,7 +41,7 @@ int	main(int ac, char **av, char **envp)
 //		if (is_builtin(args))
 //			run_builtin(args, &envp, last_status);
 		else if (ft_strchr(line, '|'))
-			cmds = cmd_parse(line);
+			/*cmds = */cmd_parse(line);
 //		else
 //			run_binary(args, my_env);
 		free(line);

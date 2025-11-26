@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 20:29:19 by soemin            #+#    #+#             */
-/*   Updated: 2025/10/02 18:54:39 by ksan             ###   ########.sg       */
+/*   Updated: 2025/11/23 17:21:36 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ int		parse_sign(const char *str, int *sign, int *valid);
 long	atol_valid(const char *str, int *valid);
 int		ft_exit(char **args, int last_status);
 int		ft_export(char **args, char ***envp, int *last_status);
-int		ft_unset(char **args, char *var_nam);
-int		run_builtin(char **args, char **envp, char *var_name, int last_status);
+int		ft_unset(char **args, char ***envp);
+int		run_builtin(char **args, char ***envp, int last_status);
 // utils
 char	**dup_env(char **envp);
 char	*get_path_value(char **envp);
