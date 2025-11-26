@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 13:48:34 by soemin            #+#    #+#             */
-/*   Updated: 2025/10/02 18:36:34 by ksan             ###   ########.sg       */
+/*   Updated: 2025/11/26 18:17:35 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,25 @@ static void	info_printpipetokens(t_list_cmds *cmds, int cmd_count)
 int	main(int ac, char **av, char **envp)
 {
 	char	*line;
-	int		last_status;
+//	int		last_status;
 //	char	**my_env;
-	t_list_cmds	*cmds;
-	int	cmd_count;
+//	t_list_cmds	*cmds;
+//	int	cmd_count;
 
 	(void)ac;
 	(void)av;
 	(void)envp;
 
+<<<<<<< HEAD
 	cmds = NULL;
 	cmd_count = 0;
 	last_status = 0;
+=======
+//	cmds = NULL;
+//	cmd_count = 0;
+//	last_status = 0;
+//	my_env = dup_env(envp);
+>>>>>>> 76f4f06 (Editing Compilation Errors for some .c files)
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -55,9 +62,18 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (*line)
 			add_history(line);
+<<<<<<< HEAD
 		cmd_count = prepare_cmds(cmds, line, envp);
 		last_status = exec_and_get_status(cmds, cmd_count);
 		parse_cleanup(cmds, cmd_count);
+=======
+//		if (is_builtin(args))
+//			run_builtin(args, &envp, last_status);
+		else if (ft_strchr(line, '|'))
+			/*cmds = */cmd_parse(line);
+//		else
+//			run_binary(args, my_env);
+>>>>>>> 76f4f06 (Editing Compilation Errors for some .c files)
 		free(line);
 	}
 	return (0);

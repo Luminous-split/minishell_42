@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 18:42:16 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/22 20:07:04 by soemin           ###   ########.fr       */
+/*   Updated: 2025/11/23 17:03:21 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ int	ft_cd(char **args, char **envp)
 		perror("cd: getcwd");
 		return (0);
 	}
-	target = get_cd_target(args, ac, env);
+	target = get_cd_target(args, ac, envp);
 	if (!target)
 		return (0);
-	return (cd_and_set_env(target, env, prev_dir));
+	return (cd_and_set_env(target, envp, prev_dir));
 }

@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 19:46:45 by soemin            #+#    #+#             */
-/*   Updated: 2025/10/02 12:41:21 by soemin           ###   ########.fr       */
+/*   Updated: 2025/11/23 17:06:14 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -88,7 +88,7 @@ int	ft_export(char **args, char ***envp, int *last_status)
 		i = 0;
 		while ((*envp)[i])
 		{
-			printf("declare -x %s\n", *e);
+			printf("declare -x %s\n", (*envp)[i]);
 			i++;
 		}
 		*last_status = 0;
@@ -101,6 +101,6 @@ int	ft_export(char **args, char ***envp, int *last_status)
 			status = 1;
 		i++;
 	}
-	last_status = status;
+	*last_status = status;
 	return (status);
 }

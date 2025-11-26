@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 16:38:24 by soemin            #+#    #+#             */
-/*   Updated: 2025/09/29 17:45:43 by soemin           ###   ########.fr       */
+/*   Updated: 2025/11/26 18:21:11 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_strtok(char *str, const char *delim)
 	static char	*saveptr;
 	char		*tok;
 	char		*temp;
-	int		index;
+//	int		index;
 
 	if (str != NULL)
 		saveptr = str;
@@ -26,7 +26,7 @@ char	*ft_strtok(char *str, const char *delim)
 	temp = strstr(saveptr, delim);
 	if (temp)
 	{
-		index = temp - saveptr;
+	//	index = temp - saveptr;
 		memset(temp, '\0', strlen(delim));
 		tok = saveptr;
 		saveptr = temp + strlen(delim);
