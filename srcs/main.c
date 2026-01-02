@@ -43,15 +43,26 @@ int	main(int ac, char **av, char **envp)
 	(void)envp;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	cmds = NULL;
 	cmd_count = 0;
 	last_status = 0;
 =======
+=======
+>>>>>>> ac95e40 (Implemented parsing for input)
 //	cmds = NULL;
 //	cmd_count = 0;
 //	last_status = 0;
 //	my_env = dup_env(envp);
+<<<<<<< HEAD
 >>>>>>> 76f4f06 (Editing Compilation Errors for some .c files)
+=======
+=======
+	cmds = NULL;
+	cmd_count = 0;
+	last_status = 0;
+>>>>>>> 8592728 (implemented parsing for input)
+>>>>>>> ac95e40 (Implemented parsing for input)
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -63,17 +74,28 @@ int	main(int ac, char **av, char **envp)
 		if (*line)
 			add_history(line);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		cmd_count = prepare_cmds(cmds, line, envp);
 		last_status = exec_and_get_status(cmds, cmd_count);
 		parse_cleanup(cmds, cmd_count);
 =======
+=======
+>>>>>>> ac95e40 (Implemented parsing for input)
 //		if (is_builtin(args))
 //			run_builtin(args, &envp, last_status);
 		else if (ft_strchr(line, '|'))
 			/*cmds = */cmd_parse(line);
 //		else
 //			run_binary(args, my_env);
+<<<<<<< HEAD
 >>>>>>> 76f4f06 (Editing Compilation Errors for some .c files)
+=======
+=======
+		cmd_count = prepare_cmds(cmds, line, envp);
+		last_status = exec_and_get_status(cmds, cmd_count);
+		parse_cleanup(cmds, cmd_count);
+>>>>>>> 8592728 (implemented parsing for input)
+>>>>>>> ac95e40 (Implemented parsing for input)
 		free(line);
 	}
 	return (0);
