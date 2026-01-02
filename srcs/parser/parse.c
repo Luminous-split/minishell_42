@@ -12,13 +12,49 @@
 
 #include "minishell.h"
 
-t_list_cmds	*cmd_parse(int argc, char *argv[], int cmd_start, int *cmd_count);
 
-void		*ft_realloc(void *ptr, size_t old_size, size_t new_size);
+/*
+static void	print_args(char **args)
+{
+	int	i;
 
-void		free_all(t_list_cmds *cmds, int count);
+	i = 0;
+	while (args[i])
+	{
+		printf("[%s]", args[i]);
+		i++;
+	}
+}
 
-static void	trim_cmdargs(char **cmd);
+static void	info_printpipetokens(t_list_cmds *cmds, int count)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < count)
+	{
+		j = -1;
+		printf("\n--------------CMD: %d------------------\n", i + 1);
+		printf("Filename append: [%s]\n", cmds[i].file_toappend);
+		printf("Filename infile: [%s]\n", cmds[i].file_toread);
+		printf("All Eof: ");
+		if (cmds[i].all_eof != NULL)
+		{
+			while (cmds[i].all_eof[++j])
+				printf("[%s]", cmds[i].all_eof[j]);
+			printf("\n");
+		}
+		else
+			printf("No Eof\n");
+		printf("Chosen Eof: %s\n", cmds[i].eof);
+		printf("\n");
+		printf("Cmd: ");
+		print_args(cmds[i].args);
+		printf("\n--------------------------------\n");
+	}
+}
+*/
 
 void	*ft_realloc(void *ptr, size_t old_size, size_t new_size)
 {
@@ -63,17 +99,7 @@ void	free_all(t_list_cmds *cmds, int count)
 	free(cmds);
 }
 
-static void	trim_cmdargs(char **cmd)
-{
-	int	j;
-
-	j = 0;
-	while (cmd[++j])
-		cmd[j] = ft_strtrim(cmd[j]);
-}
-
-
-t_list_cmds	*cmd_parse(char *line)
+t_list_cmds	*cmd_parse(char *line, char *delim, int *count)
 {
 	t_list_cmds	*cmds;
 	t_list_cmds	cmd;
@@ -81,18 +107,35 @@ t_list_cmds	*cmd_parse(char *line)
 	int			cmd_count;
 	char			*cmd_str;
 
-//	cmds = NULL; norm
+	cmds = NULL;
 	cmd_count = 0;
-	cmd_str = next_pipe_token(line);
+	cmd_str = next_token(line, delim);
 	while (cmd_str)
 	{
-		cmd.args = ft_split(line, ' '); //split and unpack
-		trim_cmdargs(cmd.args);
+//		printf("\n%s\n", cmd_str);
+		cmd.file_toappend = NULL;
+		cmd.file_toread = NULL;
+		cmd.all_eof = NULL;
+		cmd.eof = NULL;
+		cmd.args = ft_split(cmd_str, ' '); //split and unpack
 		next_size = (cmd_count + 1) * sizeof(t_list_cmds);
-		cmds = ft_realloc(cmds, (*cmd_count) * sizeof(t_list_cmds), next_size);
+		cmds = ft_realloc(cmds, (cmd_count) * sizeof(t_list_cmds), next_size);
 		cmds[cmd_count++] = cmd;
 		free(cmd_str);
-		cmd_str = next_pipe_token(NULL);
+		cmd_str = next_token(NULL, delim);
 	}
+	*count = cmd_count;
 	return (cmds);
+}
+
+int	prepare_cmds(t_list_cmds *cmds, char *line, char **envp)
+{
+	int	cmd_count;
+
+	cmd_count = 0;
+	cmds = cmd_parse(line, "|", &cmd_count);
+	parse_path(cmds, envp, cmd_count);
+	rephrase_cmd(cmds, cmd_count);
+//	info_printpipetokens(cmds, cmd_count);
+	return (cmd_count);
 }

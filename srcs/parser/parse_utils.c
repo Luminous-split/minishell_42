@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
 static char	**extract_path(char **envp);
 
@@ -18,9 +18,9 @@ static char	*prefix(char *cmd, const char *prefix_dir);
 
 static void	free_path(char **path);
 
-static void	parse_path_helper(t_list_args *cmds, char **path, int count);
+static void	parse_path_helper(t_list_cmds *cmds, char **path, int count);
 
-void		parse_path(t_list_args *cmds, char **envp, int count);
+void		parse_path(t_list_cmds *cmds, char **envp, int count);
 
 static char	**extract_path(char **envp)
 {
@@ -68,7 +68,7 @@ static void	free_path(char **path)
 	free(path);
 }
 
-static void	parse_path_helper(t_list_args *cmds, char **path, int count)
+static void	parse_path_helper(t_list_cmds *cmds, char **path, int count)
 {
 	int		i;
 	int		j;
@@ -97,7 +97,7 @@ static void	parse_path_helper(t_list_args *cmds, char **path, int count)
 	}
 }
 
-void	parse_path(t_list_args *cmds, char **envp, int count)
+void	parse_path(t_list_cmds *cmds, char **envp, int count)
 {
 	char	**path;
 
