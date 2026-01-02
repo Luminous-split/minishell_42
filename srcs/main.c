@@ -30,18 +30,22 @@ static void	info_printpipetokens(t_list_cmds *cmds, int cmd_count)
 	}
 }
 */
+
+volatile sig_atomic_t g_signal = 0;
+
 int	main(int ac, char **av, char **envp)
 {
-	char	*line;
-//	int		last_status;
+	char	*line;	
+	int		last_status;
 //	char	**my_env;
-//	t_list_cmds	*cmds;
-//	int	cmd_count;
+	t_list_cmds	*cmds;
+	int	cmd_count;
 
 	(void)ac;
 	(void)av;
 	(void)envp;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 	cmds = NULL;
@@ -63,6 +67,11 @@ int	main(int ac, char **av, char **envp)
 	last_status = 0;
 >>>>>>> 8592728 (implemented parsing for input)
 >>>>>>> ac95e40 (Implemented parsing for input)
+=======
+	cmds = NULL;
+	cmd_count = 0;
+	last_status = 0;
+>>>>>>> 650d057 (fixed pipeline (heredoc not yet))
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -75,18 +84,20 @@ int	main(int ac, char **av, char **envp)
 			add_history(line);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		cmd_count = prepare_cmds(cmds, line, envp);
 		last_status = exec_and_get_status(cmds, cmd_count);
 		parse_cleanup(cmds, cmd_count);
 =======
 =======
 >>>>>>> ac95e40 (Implemented parsing for input)
+=======
+>>>>>>> 650d057 (fixed pipeline (heredoc not yet))
 //		if (is_builtin(args))
 //			run_builtin(args, &envp, last_status);
-		else if (ft_strchr(line, '|'))
-			/*cmds = */cmd_parse(line);
 //		else
 //			run_binary(args, my_env);
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 76f4f06 (Editing Compilation Errors for some .c files)
 =======
@@ -96,6 +107,11 @@ int	main(int ac, char **av, char **envp)
 		parse_cleanup(cmds, cmd_count);
 >>>>>>> 8592728 (implemented parsing for input)
 >>>>>>> ac95e40 (Implemented parsing for input)
+=======
+		cmd_count = prepare_cmds(&cmds, line, envp);
+		last_status = exec_and_get_status(cmds, cmd_count);
+//		parse_cleanup(cmds, cmd_count);
+>>>>>>> 650d057 (fixed pipeline (heredoc not yet))
 		free(line);
 	}
 	return (0);
