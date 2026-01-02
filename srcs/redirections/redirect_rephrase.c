@@ -26,7 +26,7 @@ static int	get_count(char **args, int count)
 		if (is_append_char(args[i]) || is_redir_char(args[i]))
 		{
 			i++;
-			succeed = handle_file(args[i], is_append_char(args[i]));
+			succeed = handle_file(args[i], is_append_char(args[i - 1]));
 			if (succeed == -1)
 				return (succeed);
 		}

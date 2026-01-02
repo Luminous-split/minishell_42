@@ -30,28 +30,24 @@ static void	info_printpipetokens(t_list_cmds *cmds, int cmd_count)
 	}
 }
 */
+
+volatile sig_atomic_t g_signal = 0;
+
 int	main(int ac, char **av, char **envp)
 {
-	char	*line;
-//	int		last_status;
+	char	*line;	
+	int		last_status;
 //	char	**my_env;
-//	t_list_cmds	*cmds;
-//	int	cmd_count;
+	t_list_cmds	*cmds;
+	int	cmd_count;
 
 	(void)ac;
 	(void)av;
 	(void)envp;
 
-<<<<<<< HEAD
-//	cmds = NULL;
-//	cmd_count = 0;
-//	last_status = 0;
-//	my_env = dup_env(envp);
-=======
 	cmds = NULL;
 	cmd_count = 0;
 	last_status = 0;
->>>>>>> 8592728 (implemented parsing for input)
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -62,18 +58,13 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (*line)
 			add_history(line);
-<<<<<<< HEAD
 //		if (is_builtin(args))
 //			run_builtin(args, &envp, last_status);
-		else if (ft_strchr(line, '|'))
-			/*cmds = */cmd_parse(line);
 //		else
 //			run_binary(args, my_env);
-=======
-		cmd_count = prepare_cmds(cmds, line, envp);
+		cmd_count = prepare_cmds(&cmds, line, envp);
 		last_status = exec_and_get_status(cmds, cmd_count);
-		parse_cleanup(cmds, cmd_count);
->>>>>>> 8592728 (implemented parsing for input)
+//		parse_cleanup(cmds, cmd_count);
 		free(line);
 	}
 	return (0);

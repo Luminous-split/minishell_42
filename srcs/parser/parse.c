@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-
-/*
 static void	print_args(char **args)
 {
 	int	i;
@@ -51,10 +49,11 @@ static void	info_printpipetokens(t_list_cmds *cmds, int count)
 		printf("\n");
 		printf("Cmd: ");
 		print_args(cmds[i].args);
-		printf("\n--------------------------------\n");
+		printf("\n--------------CMD: %d END--------------\n", i + 1);
+		printf("\nvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\n");
 	}
 }
-*/
+
 
 void	*ft_realloc(void *ptr, size_t old_size, size_t new_size)
 {
@@ -128,14 +127,16 @@ t_list_cmds	*cmd_parse(char *line, char *delim, int *count)
 	return (cmds);
 }
 
-int	prepare_cmds(t_list_cmds *cmds, char *line, char **envp)
+int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp)
 {
 	int	cmd_count;
+	t_list_cmds	*temp;
 
 	cmd_count = 0;
-	cmds = cmd_parse(line, "|", &cmd_count);
-	parse_path(cmds, envp, cmd_count);
-	rephrase_cmd(cmds, cmd_count);
-//	info_printpipetokens(cmds, cmd_count);
+	temp = cmd_parse(line, "|", &cmd_count);
+	parse_path(temp, envp, cmd_count);
+	rephrase_cmd(temp, cmd_count);
+	*cmds = temp;
+	info_printpipetokens(temp, cmd_count);
 	return (cmd_count);
 }

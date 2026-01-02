@@ -36,12 +36,12 @@ typedef struct s_list_cmds
 }	t_list_cmds;
 
 // Global Variable for received signal
-
-//FUNCTIONS
+extern volatile sig_atomic_t g_signal;
+// FUNCTIONS
 
 // parser
 t_list_cmds     *cmd_parse(char *line, char *delim, int *count);
-int	prepare_cmds(t_list_cmds *cmds, char *line, char **envp);
+int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp);
 
 char	*ft_strtok(char *str, const char *delim);
 void	expand_dollar(const char *line, char *tok, char **envp, int last_status);

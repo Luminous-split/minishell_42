@@ -47,7 +47,6 @@ int	exec_and_get_status(t_list_cmds *cmds, int cmd_count)
 {
 	int			exit_status;
 
-	cmd_count = 0;
 	exit_status = 0;
 	if (exit_status)
 		return (1);
