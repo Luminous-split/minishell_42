@@ -10,26 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-static char	*strip_quotes(char *str)
-{
-	size_t	len;
-
-	len = strlen(str);
-	if (len >= 2)
-	{
-		if ((str[0] == '"' && str[len - 1] == '"')
-			|| (str[0] == '\'' && str[len - 1] == '\''))
-		{
-			str[len - 1] = '\0';
-			return (str + 1);
-		}
-	}
-	return (str);
-}
+#include "minishell.h"
 
 static void	update_quotes(char c, int *in_s, int *in_d)
 {
@@ -57,17 +38,20 @@ static char	*malloc_token(const char *start, int len)
 	return (token);
 }
 
-static	char	*check_end(char *str)
+static	char	*check_end(char *str, char *delim)
 {
-	if (*str == '|')
-		return (str + 1);
+	int	delim_len;
+
+	delim_len = ft_strlen(delim);
+	if (ft_strncmp(str, delim, delim_len) == 0)
+		return (str + delim_len);
 	else
 		return (NULL);
 }
 
-char	*next_pipe_token(char *str)
+char	*next_token(char *str, char *delim)
 {
-	static char	*input = NULL;
+	static char	*input;
 	char		*start;
 	int			len;
 	int			in_s;
@@ -84,45 +68,11 @@ char	*next_pipe_token(char *str)
 	while (*input)
 	{
 		update_quotes(*input, &in_s, &in_d);
-		if (*input == '|' && !in_s && !in_d)
+		if (ft_strnstr(input, delim, ft_strlen(delim)) && !in_s && !in_d)
 			break ;
 		input++;
 		len++;
 	}
-	input = check_end(input);
+	input = check_end(input, delim);
 	return (malloc_token(start, len));
 }
-
-/*
-void	tokenize_and_print(char *cmd, int index)
-{
-	char	*token;
-
-	printf("Command %d:\n", index);
-	token = strtok(cmd, " \t\n");
-	while (token)
-	{
-		token = strip_quotes(token);
-		printf("  [%s]\n", token);
-		token = strtok(NULL, " \t\n");
-	}
-}
-
-int	main(void)
-{
-	char	input[] = "echo \"hello |\" | grep 'hello world' | wc -l";
-	char	*segment;
-	int		index;
-
-	index = 0;
-	segment = next_pipe_token(input);
-	while (segment)
-	{
-		tokenize_and_print(segment, index);
-		free(segment);
-		index++;
-		segment = next_pipe_token(NULL);
-	}
-	return (0);
-}
-*/

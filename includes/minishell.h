@@ -28,7 +28,11 @@
 
 typedef struct s_list_cmds
 {
-	char	**cmds;
+	char	*file_toappend;
+	char	*file_toread;
+	char	**all_eof;
+	char	*eof;
+	char	**args;
 }	t_list_cmds;
 
 // Global Variable for received signal
@@ -36,18 +40,47 @@ typedef struct s_list_cmds
 //FUNCTIONS
 
 // parser
+t_list_cmds     *cmd_parse(char *line, char *delim, int *count);
+int	prepare_cmds(t_list_cmds *cmds, char *line, char **envp);
+
 char	*ft_strtok(char *str, const char *delim);
 void	expand_dollar(const char *line, char *tok, char **envp, int last_status);
 char    *handle_single_quotes(const char *line, int start, char *tok);
 char    *handle_double_quotes(const char *line, int start, char **envp, int last_status);
-
 void		parse_path(t_list_cmds *cmds, char **envp, int count);
-t_list_cmds     *cmd_parse(char *line);
 void		*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 void            free_all(t_list_cmds *cmds, int count);
-char		*next_pipe_token(char *str);
+char		*next_token(char *str, char *delim);
+void		parse_cleanup(t_list_cmds *cmds, int cmd_count);
+
+// redir
+void	rephrase_cmd(t_list_cmds *full_cmd, int count);
+int	prepare_redir_append(t_list_cmds *full_cmd);
+void	prepare_redir(t_list_cmds *full_cmd);
+void	prepare_inredir(t_list_cmds *full_cmd);
+int	prepare_heredoc(t_list_cmds *full_cmd);
+void	construct_cmd(t_list_cmds *full_cmd);
+void	construct_cmd1(t_list_cmds *full_cmd);
+void	update_chosen_heredoc(t_list_cmds *full_cmd);
+void	handle_one_heredoc(t_list_cmds *full_cmd, int count);
+
+void	free_arg(char **arg);
+
+// redir utils
+int     get_cmdlet_count(char **cmd_arr);
+int     is_redir_char(char *arg);
+int     is_append_char(char *arg);
+int     is_inredirect_char(char *arg);
+int     is_heredoc_char(char *arg);
+
+// file
+int	handle_file(char *file_name, int is_last);
+int	check_file_inredir(char *file_name);
 
 // exec
+int     exec_cmds(t_list_cmds *cmds, int count,
+		int (*func_ptr)(int*, int*, int*));
+int	exec_and_get_status(t_list_cmds *cmds, int cmd_count);
 int	run_binary(char **args, char **envp);
 
 // built-in cmds
@@ -69,4 +102,9 @@ char	**dup_env(char **envp);
 char	*get_path_value(char **envp);
 int		ft_setenv(char ***envp, const char *name, const char *value);
 void	setup_signals(void);
+
+//error
+int	redir_error(void);
+
+
 #endif

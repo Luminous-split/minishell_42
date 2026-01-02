@@ -12,6 +12,24 @@
 
 #include "minishell.h"
 
+/*
+static void	info_printpipetokens(t_list_cmds *cmds, int cmd_count)
+{
+	int i = -1;
+	while (++i < cmd_count)
+	{
+		printf("----------------------\n");
+		printf(" Is>>?: %d; Is>?: %d. Arg %d: token: [", cmds[i].is_redir_gtgt, cmds[i].is_redir_gt, i);
+		while (*(cmds[i].args))
+		{
+			printf("[%s]", *(cmds[i].args));
+			(cmds[i].args)++;
+		}
+		printf("]\n");
+		printf("----------------------\n");
+	}
+}
+*/
 int	main(int ac, char **av, char **envp)
 {
 	char	*line;
@@ -27,7 +45,6 @@ int	main(int ac, char **av, char **envp)
 	cmds = NULL;
 	cmd_count = 0;
 	last_status = 0;
-//	my_env = dup_env(envp);
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -38,12 +55,9 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (*line)
 			add_history(line);
-//		if (is_builtin(args))
-//			run_builtin(args, &envp, last_status);
-		else if (ft_strchr(line, '|'))
-			cmds = cmd_parse(line);
-//		else
-//			run_binary(args, my_env);
+		cmd_count = prepare_cmds(cmds, line, envp);
+		last_status = exec_and_get_status(cmds, cmd_count);
+		parse_cleanup(cmds, cmd_count);
 		free(line);
 	}
 	return (0);
