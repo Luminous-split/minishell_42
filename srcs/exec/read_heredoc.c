@@ -28,6 +28,8 @@ int	read_heredoc(char *eof, char **envp, int last_status)
 	int	pipefd[2];
 	char	*str;
 
+	(void)last_status;
+	(void)envp;
 	if (pipe(pipefd) < 0)
 	{
 		perror("pipe failed");
@@ -36,8 +38,6 @@ int	read_heredoc(char *eof, char **envp, int last_status)
 	while (1)
 	{
 		str = readline("> ");
-//		unpack_token(str, envp, last_status);
-		printf("Lstat: %d: TestEnvp: %s", last_status, envp[0]);
 		if (is_valid_eof(str, eof) == 1 || str == NULL)
 		{
 			free(str);

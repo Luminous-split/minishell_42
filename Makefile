@@ -27,12 +27,12 @@ SRCS = srcs/main.c \
        srcs/redirections/file_handle.c \
        srcs/redirections/redirect.c \
        srcs/redirections/free_utils.c \
-       srcs/redirections/redirect_utils.c \
        srcs/redirections/redirect_out.c \
        srcs/redirections/redirect_append_out.c \
        srcs/redirections/redirect_in.c \
        srcs/redirections/redirect_heredoc.c \
-       srcs/redirections/redirect_heredoc_util.c \
+       srcs/redirections/redirect_utils.c \
+       srcs/redirections/redirect_utils1.c \
        srcs/redirections/redirect_rephrase.c \
        srcs/redirections/redirect_rephrase1.c \
        srcs/exec/exec_cmd.c \

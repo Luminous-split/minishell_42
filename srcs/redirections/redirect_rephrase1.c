@@ -33,12 +33,7 @@ static int	get_count_inredir(t_list_cmds *full_cmd, int count)
 			to_reduce++;
 		}
 	}
-	if (count > 1 && is_inredirect_char(full_cmd->args[count - 2]))
-	{
-		free(full_cmd->eof);
-		full_cmd->eof = NULL;
-		full_cmd->file_toread = ft_strdup(temp_name);
-	}
+	update_infile(full_cmd, temp_name, count);
 	return (to_reduce * 2);
 }
 
