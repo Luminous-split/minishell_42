@@ -6,17 +6,15 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 14:43:26 by soemin            #+#    #+#             */
-/*   Updated: 2025/10/02 17:10:02 by soemin           ###   ########.fr       */
+/*   Updated: 2026/01/04 14:41:51 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-char	*handle_single_quotes(const char *line, int start, char *tok)
+char	*handle_single_quotes(const char *line, int i, char *tok)
 {
-	int	i;
 	int	j;
 
-	i = start;
 	j = 0;
 	if (line[i] == '\'')
 		i++;

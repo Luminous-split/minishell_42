@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 13:48:34 by soemin            #+#    #+#             */
-/*   Updated: 2025/11/26 18:17:35 by soemin           ###   ########.fr       */
+/*   Updated: 2026/01/04 14:02:24 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ int	main(int ac, char **av, char **envp)
 //		handle_pending_pipe(&line);
 		printf("%s\n", line);
 <<<<<<< HEAD
+<<<<<<< HEAD
 //		if (prepare_cmds(&cmds, line, envp, &cmd_count) != -1)
 		//last_status = 
 		(void)exec_and_get_status;
@@ -145,6 +146,10 @@ int	main(int ac, char **av, char **envp)
 		if (prepare_cmds(&cmds, line, envp, &cmd_count) != -1)
 		last_status = exec_and_get_status(cmds, cmd_count);
 >>>>>>> 164440c (added valgrind test)
+=======
+		if (prepare_cmds(&cmds, line, envp, (int *[]){&cmd_count, &last_status}) != -1)
+			last_status = exec_and_get_status(cmds, cmd_count);
+>>>>>>> 25131b7 (edits on heredocs and tokens)
 		free(line);
 	}
 	return (0);

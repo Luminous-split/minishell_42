@@ -1,33 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   double_quote.c                                     :+:      :+:    :+:   */
+/*   unpack_token.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/02 16:35:18 by soemin            #+#    #+#             */
-/*   Updated: 2026/01/04 15:47:34 by soemin           ###   ########.fr       */
+/*   Created: 2026/01/04 15:48:25 by soemin            #+#    #+#             */
+/*   Updated: 2026/01/04 15:48:55 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
-char	*handle_double_quotes(const char *line, int i, char **envp, int last_status)
+char	*unpack_token(char *line, char **envp, int last_status)
 {
-	int     start;
-	char    *sub;
-	char    *expanded;
-
-	if (line[i] == '"')
-		i++;
-	start = i;
-	while (line[i] && line[i] != '"')
-		i++;
-	sub = ft_substr(line, start, i - start);
-	if (!sub)
-		return (NULL);
-	expanded = expand_dollar(sub, envp, last_status);
-	free(sub);
-	if (!expanded)
-		return (NULL);
-	return (expanded);
-}
