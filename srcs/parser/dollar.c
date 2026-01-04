@@ -6,73 +6,114 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:12:08 by soemin            #+#    #+#             */
-/*   Updated: 2025/11/23 19:44:52 by soemin           ###   ########.fr       */
+/*   Updated: 2026/01/04 14:41:09 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-int	expand_dollar_var(const char *line, char *tok, char **envp, int i)
+int	append_char(char **tok, char c)
 {
-	int		j;
-	int		k;
-	char	var[256];
-	char	*env_val;
+	char	*new;
+	size_t	len;
+	
+	if (*tok)
+		len = ft_strlen(*tok);
+	else
+		len = 0;
+	new = malloc(len + 2);
+	if (!new)
+		return (-1);
+	if (*tok)
+		ft_memcpy(new, *tok, len);
+	new[len] = c;
+	new[len + 1] = '\0';
+	free(*tok);
+	*tok = new;
+	return (0);
+}
 
-	j = 0;
+int	append_str(char **tok, size_t *len, const char *s)
+{
+	size_t	s_len;
+	size_t len;
+	char	*new;
+
+	if (!s)
+		return (0);
+	if (*tok)
+		len = ft_strlen(*tok);
+	else
+		len = 0;
+	s_len = ft_strlen(s);
+	new = malloc(len + s_len + 1);
+	if (!new)
+		return (-1);
+	if (*tok)
+		ft_memcpy(new, *tok, len);
+	ft_memcpy(new + len, s, s_len);
+	new[len + s_len] = '\0';
+	free(*tok);
+	*tok = new;
+	return (0);
+}
+
+int	expand_dollar_var(const char *line, int i, char **tok, char **envp)
+{
+	char var[256];
+	int k;
+	char *val;
+	
 	k = 0;
 	while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
-	{
 		var[k++] = line[i++];
-	}
 	var[k] = '\0';
-	j = ft_strlen(tok);
-	env_val = get_env_var(envp, var);
-	if (env_val)
-	{
-		ft_strlcpy(&tok[j], env_val, 1024 - j);
-	}
+	val = get_env_var(envp, var);
+	if (val && append_str(tok, val) == -1)
+		return (-1);
 	return (i);
 }
 
-int	expand_dollar_qm(const char *line, char *tok, int last_status, int i)
+int expand_dollar_qm(int i, char **tok, int last_status)
 {
-	int	j;
-	int	k;
-	char	*exit_str;
-
-	(void)line;
-	exit_str = ft_itoa(last_status);
-	if (!exit_str)
-		return (i);
-	j = 0;
-	k = 0;
-	while (exit_str[k])
-		tok[j++] = exit_str[k++];
-	free(exit_str);
+	char *s;
+	
+	s = ft_itoa(last_status);
+	
+	if (!s)
+		return (-1);
+	if (append_str(tok, s) == -1)
+	{
+		free(s);
+		return (-1);
+	}
+	free(s);
 	return (i + 1);
 }
 
-void	expand_dollar(const char *line, char *tok, char **envp, int last_status)
+char	*expand_dollar(const char *line, char **envp, int last_status)
 {
-	int	i;
-	int	j;
-
+	char *tok;
+	int i;
+	
+	tok = NULL;
 	i = 0;
-	j = 0;
 	while (line[i])
 	{
 		if (line[i] == '$')
 		{
 			i++;
-			if (line[i] == '?') 
-				i = expand_dollar_qm(line, tok + j, last_status, i);
+			if (line[i] == '?')
+				i = expand_dollar_qm(i, &tok, last_status);
 			else
-				i = expand_dollar_var(line, tok + j, envp, i);
-			while (tok[j])
-				j++;
+				i = expand_dollar_var(line, i, &tok, envp);
+			if (i < 0)
+				return (free(tok), NULL);
 		}
 		else
-			tok[j++] = line[i++];
+		{
+			if (append_char(&tok, line[i++]) == -1)
+				return (free(tok), NULL);
+		}
 	}
-	tok[j] = '\0';
+	return (tok);
 }

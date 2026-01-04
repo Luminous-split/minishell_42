@@ -43,7 +43,7 @@ extern volatile sig_atomic_t g_signal;
 
 // parser
 t_list_cmds     *cmd_parse(char *line, char *delim, int *count);
-int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp, int *final_count);
+int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp, int **cnt_lst);
 
 char	*ft_strtok(char *str, const char *delim);
 void	expand_dollar(const char *line, char *tok, char **envp, int last_status);
@@ -59,7 +59,7 @@ void		cleanup_cmd(t_list_cmds *cmds, int cmd_count);
 void    	check_builtin(t_list_cmds *cmd, int cmd_count);
 
 // redir
-int	rephrase_cmd(t_list_cmds *full_cmd, int count);
+int	rephrase_cmd(t_list_cmds *all_cmd, int count, char **envp, int last_status);
 int	prepare_redir_append(t_list_cmds *full_cmd);
 void	prepare_redir(t_list_cmds *full_cmd);
 void	prepare_inredir(t_list_cmds *full_cmd);
@@ -87,7 +87,7 @@ int     exec_cmds(t_list_cmds *cmds, int count,
 		int (*func_ptr)(int*, int*, int*));
 int	exec_and_get_status(t_list_cmds *cmds, int cmd_count);
 int	run_binary(char **args, char **envp);
-int	read_heredoc(char *eof);
+int	read_heredoc(char *eof, char **envp, int last_status);
 // built-in cmds
 int		ft_echo(char **args);
 int		ft_pwd(void);

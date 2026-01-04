@@ -111,7 +111,7 @@ t_list_cmds	*cmd_parse(char *line, char *delim, int *count)
 	return (cmds);
 }
 
-int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp, int *final_count)
+int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp, int **cnt_lst)
 {
 	int	cmd_count;
 	t_list_cmds	*temp;
@@ -119,9 +119,9 @@ int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp, int *final_count)
 	cmd_count = 0;
 	temp = cmd_parse(line, "|", &cmd_count);
 	parse_path(temp, envp, cmd_count);
-	if (rephrase_cmd(temp, cmd_count) == 2)
+	if (rephrase_cmd(temp, cmd_count, envp, *(cnt_lst[1])) == 2)
 		return (-1);
-	*final_count = cmd_count;
+	*(cnt_lst[0]) = cmd_count;
 	*cmds = temp;
 	info_printpipetokens(temp, cmd_count);
 	return (1);

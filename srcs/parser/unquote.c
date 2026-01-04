@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   double_quote.c                                     :+:      :+:    :+:   */
+/*   unquote.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/02 16:35:18 by soemin            #+#    #+#             */
-/*   Updated: 2026/01/04 15:47:34 by soemin           ###   ########.fr       */
+/*   Created: 2026/01/04 14:59:38 by soemin            #+#    #+#             */
+/*   Updated: 2026/01/04 15:01:02 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
 
-char	*handle_double_quotes(const char *line, int i, char **envp, int last_status)
+int	unquoted(char **tok, char *part)
 {
-	int     start;
-	char    *sub;
-	char    *expanded;
-
-	if (line[i] == '"')
-		i++;
-	start = i;
-	while (line[i] && line[i] != '"')
-		i++;
-	sub = ft_substr(line, start, i - start);
-	if (!sub)
-		return (NULL);
-	expanded = expand_dollar(sub, envp, last_status);
-	free(sub);
-	if (!expanded)
-		return (NULL);
-	return (expanded);
+	if (!part)
+		return (-1);
+	if (append_str(tok, part) == -1)
+	{
+		free(part);
+		return (-1);
+	}
+	free(part);
+	return (0);
 }

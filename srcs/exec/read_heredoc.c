@@ -6,7 +6,7 @@
 /*   By: ksan <ksan@student.42.sg>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 11:23:31 by ksan              #+#    #+#             */
-/*   Updated: 2026/01/03 11:23:31 by ksan             ###   ########.sg       */
+/*   Updated: 2026/01/04 13:57:34 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	is_valid_eof(char *str, char *limiter)
 	return (0);
 }
 
-int	read_heredoc(char *eof)
+int	read_heredoc(char *eof, char **envp, int last_status)
 {
 	int	pipefd[2];
 	char	*str;
@@ -36,6 +36,8 @@ int	read_heredoc(char *eof)
 	while (1)
 	{
 		str = readline("> ");
+//		unpack_token(str, envp, last_status);
+		printf("Lstat: %d: TestEnvp: %s", last_status, envp[0]);
 		if (is_valid_eof(str, eof) == 1 || str == NULL)
 		{
 			free(str);
