@@ -72,6 +72,7 @@ void	handle_one_heredoc(t_list_cmds *full_cmd, int count);
 void	free_arg(char **arg);
 
 // redir utils
+void	update_infile(t_list_cmds *full_cmd, char *file_name, int count);
 int     get_cmdlet_count(char **cmd_arr);
 int     is_redir_char(char *arg);
 int     is_append_char(char *arg);
