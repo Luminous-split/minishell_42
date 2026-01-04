@@ -14,6 +14,7 @@
 
 volatile sig_atomic_t g_signal = 0;
 
+/*
 static int	check_pending(char *line)
 {
 	char	*trimmed;
@@ -48,6 +49,7 @@ static	void	handle_pending_pipe(char **line)
 		}
 	}
 }
+*/
 
 int	main(int ac, char **av, char **envp)
 {
@@ -75,12 +77,10 @@ int	main(int ac, char **av, char **envp)
 		if (*line)
 			add_history(line);
 
-		handle_pending_pipe(&line);
+//		handle_pending_pipe(&line);
 		printf("%s\n", line);
-//		if (prepare_cmds(&cmds, line, envp, &cmd_count) != -1)
-		//last_status = 
-		(void)exec_and_get_status;
-		//(cmds, cmd_count);
+		if (prepare_cmds(&cmds, line, envp, &cmd_count) != -1)
+		last_status = exec_and_get_status(cmds, cmd_count);
 		free(line);
 	}
 	return (0);
