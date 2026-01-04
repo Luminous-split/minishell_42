@@ -27,7 +27,14 @@ static void	cleanup_alleof(t_list_cmds *full_cmd)
 
 void	handle_one_heredoc(t_list_cmds *full_cmd, int count)
 {
-	full_cmd->eof = ft_strdup(full_cmd->args[count - 1]);
+	int	i;
+
+	i = -1;
+	while (++i < count)
+	{
+		if (is_heredoc_char(full_cmd->args[i]))
+			full_cmd->eof = ft_strdup(full_cmd->args[i + 1]);
+	}
 	cleanup_alleof(full_cmd);
 }
 
@@ -47,7 +54,6 @@ void	update_chosen_heredoc(t_list_cmds *full_cmd)
 		{
 			if (full_cmd->all_eof[index + 2] == NULL)
 			{
-				printf("\nDebug EOF: %zu\n", sizeof(full_cmd->all_eof));
 				full_cmd->eof = ft_strdup(full_cmd->all_eof[index + 1]);
 				cleanup_alleof(full_cmd);
 				free(line);

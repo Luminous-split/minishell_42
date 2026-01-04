@@ -32,7 +32,7 @@ static void	clean_args(t_list_cmds cmd)
 	free(cmd.args);
 }
 
-void	parse_cleanup(t_list_cmds *cmds, int cmd_count)
+void	cleanup_cmd(t_list_cmds *cmds, int cmd_count)
 {
 	int	i;
 
@@ -46,10 +46,14 @@ void	parse_cleanup(t_list_cmds *cmds, int cmd_count)
 		if (cmds[i].file_toread)
 			free(cmds[i].file_toread);
 		if (cmds[i].eof)
+		{
 			free(cmds[i].eof);
+			cmds[i].eof = NULL;
+		}
 		if (cmds[i].all_eof)
 			clean_eof(cmds[i]);
-		clean_args(cmds[i]);
+		if (cmds[i].args)
+			clean_args(cmds[i]);
 	}
 	free(cmds);
 	cmds = NULL;

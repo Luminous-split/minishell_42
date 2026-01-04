@@ -22,6 +22,7 @@ SRCS = srcs/main.c \
        srcs/parser/parse_cleanup.c \
        srcs/parser/parse_utils.c \
        srcs/parser/parse_utils1.c \
+       srcs/parser/parse_builtin.c \
        srcs/error/redir_error.c \
        srcs/redirections/file_handle.c \
        srcs/redirections/redirect.c \
@@ -35,7 +36,8 @@ SRCS = srcs/main.c \
        srcs/redirections/redirect_rephrase.c \
        srcs/redirections/redirect_rephrase1.c \
        srcs/exec/exec_cmd.c \
-       srcs/exec/exec_cmd_utils.c
+       srcs/exec/exec_cmd_utils.c \
+       srcs/exec/read_heredoc.c
 
 OBJS = $(SRCS:.c=.o)
 

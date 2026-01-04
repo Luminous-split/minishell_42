@@ -83,7 +83,7 @@ static void	final_cmd(t_list_cmds *full_cmd, int old_count, int new_count)
 	full_cmd->args = new_cmd;
 }
 
-void	construct_cmd(t_list_cmds *full_cmd)
+int	construct_cmd(t_list_cmds *full_cmd)
 {
 	int	i;
 	int	count;
@@ -92,9 +92,10 @@ void	construct_cmd(t_list_cmds *full_cmd)
 	i = -1;
 	count = check_validity(full_cmd);
 	if (count == -1)
-		return ;
+		return (-1);
 	new_count = get_count(full_cmd->args, count);
 	if (new_count == -1)
-		return ;
+		return (-1);
 	final_cmd(full_cmd, count, new_count);
+	return (1);
 }

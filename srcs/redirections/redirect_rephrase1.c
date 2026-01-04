@@ -113,7 +113,7 @@ static void	final_cmd(t_list_cmds *full_cmd, int old_count, int new_count)
 	full_cmd->args = new_cmd;
 }
 
-void	construct_cmd1(t_list_cmds *full_cmd)
+int	construct_cmd1(t_list_cmds *full_cmd)
 {
 	int	i;
 	int	count;
@@ -122,7 +122,7 @@ void	construct_cmd1(t_list_cmds *full_cmd)
 	i = -1;
 	count = check_validity(full_cmd);
 	if (count == -1)
-		return ;
+		return (-1);
 	new_count = get_count_heredoc(full_cmd, count);
 	if (new_count < count)
 	{
@@ -132,7 +132,8 @@ void	construct_cmd1(t_list_cmds *full_cmd)
 			update_chosen_heredoc(full_cmd);
 	}
 	if (get_count_inredir(full_cmd, count) == -1)
-		return ;
+		return (-1);
 	new_count = new_count - get_count_inredir(full_cmd, count);
 	final_cmd(full_cmd, count, new_count);
+	return (1);
 }
