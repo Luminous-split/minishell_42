@@ -63,33 +63,9 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	(void)envp;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 	cmds = NULL;
 	cmd_count = 0;
 	last_status = 0;
-=======
-=======
->>>>>>> ac95e40 (Implemented parsing for input)
-//	cmds = NULL;
-//	cmd_count = 0;
-//	last_status = 0;
-//	my_env = dup_env(envp);
-<<<<<<< HEAD
->>>>>>> 76f4f06 (Editing Compilation Errors for some .c files)
-=======
-=======
-	cmds = NULL;
-	cmd_count = 0;
-	last_status = 0;
->>>>>>> 8592728 (implemented parsing for input)
->>>>>>> ac95e40 (Implemented parsing for input)
-=======
-	cmds = NULL;
-	cmd_count = 0;
-	last_status = 0;
->>>>>>> 650d057 (fixed pipeline (heredoc not yet))
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -100,56 +76,11 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (*line)
 			add_history(line);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-		cmd_count = prepare_cmds(cmds, line, envp);
-		last_status = exec_and_get_status(cmds, cmd_count);
-		parse_cleanup(cmds, cmd_count);
-=======
-=======
->>>>>>> ac95e40 (Implemented parsing for input)
-=======
->>>>>>> 650d057 (fixed pipeline (heredoc not yet))
-//		if (is_builtin(args))
-//			run_builtin(args, &envp, last_status);
-//		else
-//			run_binary(args, my_env);
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 76f4f06 (Editing Compilation Errors for some .c files)
-=======
-=======
-		cmd_count = prepare_cmds(cmds, line, envp);
-		last_status = exec_and_get_status(cmds, cmd_count);
-		parse_cleanup(cmds, cmd_count);
->>>>>>> 8592728 (implemented parsing for input)
->>>>>>> ac95e40 (Implemented parsing for input)
-=======
-		cmd_count = prepare_cmds(&cmds, line, envp);
-		last_status = exec_and_get_status(cmds, cmd_count);
-//		parse_cleanup(cmds, cmd_count);
->>>>>>> 650d057 (fixed pipeline (heredoc not yet))
-=======
 
 //		handle_pending_pipe(&line);
 		printf("%s\n", line);
-<<<<<<< HEAD
-<<<<<<< HEAD
-//		if (prepare_cmds(&cmds, line, envp, &cmd_count) != -1)
-		//last_status = 
-		(void)exec_and_get_status;
-		//(cmds, cmd_count);
->>>>>>> 6895981 (fixed return values for invalid command cases)
-=======
-		if (prepare_cmds(&cmds, line, envp, &cmd_count) != -1)
-		last_status = exec_and_get_status(cmds, cmd_count);
->>>>>>> 164440c (added valgrind test)
-=======
 		if (prepare_cmds(&cmds, line, envp, (int *[]){&cmd_count, &last_status}) != -1)
 			last_status = exec_and_get_status(cmds, cmd_count);
->>>>>>> 25131b7 (edits on heredocs and tokens)
 		free(line);
 	}
 	return (0);
