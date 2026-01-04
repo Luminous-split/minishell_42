@@ -1,1 +1,1 @@
-./minishell <<< $1
+valgrind --suppressions=readline.supp --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes --track-origins=yes ./minishell
