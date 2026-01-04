@@ -12,30 +12,46 @@
 
 #include "minishell.h"
 
-/*
-static void	info_printpipetokens(t_list_cmds *cmds, int cmd_count)
+volatile sig_atomic_t g_signal = 0;
+
+static int	check_pending(char *line)
 {
-	int i = -1;
-	while (++i < cmd_count)
+	char	*trimmed;
+
+	trimmed = ft_strtrim(line, " ");
+	if (trimmed[ft_strlen(trimmed) - 1] == '|')
+		return (1);
+	free(trimmed);
+	return (0);
+}
+
+static	void	handle_pending_pipe(char **line)
+{
+	char	*extra;
+	size_t	new_size;
+	size_t	old_size;
+
+	old_size = ft_strlen(*line);
+	if (check_pending(*line))
 	{
-		printf("----------------------\n");
-		printf(" Is>>?: %d; Is>?: %d. Arg %d: token: [", cmds[i].is_redir_gtgt, cmds[i].is_redir_gt, i);
-		while (*(cmds[i].args))
+		extra = readline("> ");
+		while ((extra && extra[0] == '\0' ) || check_pending(extra))
 		{
-			printf("[%s]", *(cmds[i].args));
-			(cmds[i].args)++;
+			if (!(extra[0] == '\0'))
+			{
+				new_size = (old_size + ft_strlen(extra)) * sizeof(char);
+				*line = ft_realloc(*line, old_size * sizeof(char), new_size);
+				ft_memcpy((*line)+old_size, extra, ft_strlen(extra));
+				free(extra);
+			}
+			extra = readline("> ");
 		}
-		printf("]\n");
-		printf("----------------------\n");
 	}
 }
-*/
-
-volatile sig_atomic_t g_signal = 0;
 
 int	main(int ac, char **av, char **envp)
 {
-	char	*line;	
+	char	*line;
 	int		last_status;
 //	char	**my_env;
 	t_list_cmds	*cmds;
@@ -58,13 +74,13 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (*line)
 			add_history(line);
-//		if (is_builtin(args))
-//			run_builtin(args, &envp, last_status);
-//		else
-//			run_binary(args, my_env);
-		cmd_count = prepare_cmds(&cmds, line, envp);
-		last_status = exec_and_get_status(cmds, cmd_count);
-//		parse_cleanup(cmds, cmd_count);
+
+		handle_pending_pipe(&line);
+		printf("%s\n", line);
+//		if (prepare_cmds(&cmds, line, envp, &cmd_count) != -1)
+		//last_status = 
+		(void)exec_and_get_status;
+		//(cmds, cmd_count);
 		free(line);
 	}
 	return (0);

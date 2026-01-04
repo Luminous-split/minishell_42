@@ -12,7 +12,17 @@
 
 #include "minishell.h"
 
-void	rephrase_cmd(t_list_cmds *all_cmd, int count)
+static	void	pre_read_heredoc(t_list_cmds *cmd)
+{
+	if (cmd->eof == NULL)
+		return ;
+	if (cmd->file_toread)
+		return ;
+	else if (cmd->eof)
+		cmd->heredoc_fd = read_heredoc(cmd->eof);
+}
+
+int	rephrase_cmd(t_list_cmds *all_cmd, int count)
 {
 	int	i;
 	(void)all_cmd;
@@ -23,7 +33,12 @@ void	rephrase_cmd(t_list_cmds *all_cmd, int count)
 		prepare_redir(&all_cmd[i]);
 		prepare_inredir(&all_cmd[i]);
 		prepare_heredoc(&all_cmd[i]);
-		construct_cmd1(&all_cmd[i]);
-		construct_cmd(&all_cmd[i]);
+
+		if (construct_cmd1(&all_cmd[i]) == -1)
+			return (2);
+		if (construct_cmd(&all_cmd[i]) == -1)
+			return (2);
+		pre_read_heredoc(&all_cmd[i]);
 	}
+	return (0);
 }

@@ -25,9 +25,11 @@ int	check_file_inredir(char *file_name)
 
 int	handle_file(char *file_name, int is_append)
 {
+	int	check_fd;
 	int	fd;
 
-	if (open(file_name, O_WRONLY) < 0)
+	check_fd = open(file_name, O_WRONLY);
+	if (check_fd < 0)
 	{
 		if (errno == ENOENT)
 		{
@@ -45,6 +47,9 @@ int	handle_file(char *file_name, int is_append)
 		fd = open(file_name, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	else
 		fd = open(file_name, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	close(fd);
+	if (fd >= 0)
+		close(fd);
+	if (check_fd >= 0)
+		close(check_fd);
 	return (1);
 }

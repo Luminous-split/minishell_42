@@ -12,13 +12,17 @@
 
 #include "libft.h"
 
-static int	ft_ismatch(char head, char tail);
-
-static int	ft_isquote(char target, char c);
-
-char		*ft_strtrim(char *s1);
-
-char	*ft_strtrim(char *s1)
+static int	ft_isset(char c, char const *set)
+{
+	while (*set)
+	{
+		if (*set == c)
+			return (1);
+		set++;
+	}
+	return (0);
+}
+char	*ft_strtrim(char *s1, char *set)
 {
 	size_t	s1_len;
 	size_t	head;
@@ -26,26 +30,26 @@ char	*ft_strtrim(char *s1)
 	char	*trimmed_str;
 	size_t	trimmed_slen;
 
-	if (!s1)
+	if (!s1 || !set)
 		return (NULL);
 	s1_len = ft_strlen(s1);
 	head = 0;
 	tail = s1_len - 1;
-	if (ft_ismatch(s1[head], s1[tail]))
-	{
+	while (s1[head] != '\0' && ft_isset(s1[head], set))
 		head++;
+	tail = s1_len - 1;
+	while (tail >= head && ft_isset(s1[tail], set))
 		tail--;
-	}
 	trimmed_slen = tail - head + 1;
 	trimmed_str = (char *)malloc(sizeof(char) * (trimmed_slen + 1));
 	if (!trimmed_str)
 		return (NULL);
 	ft_memcpy(trimmed_str, s1 + head, trimmed_slen);
 	trimmed_str[trimmed_slen] = '\0';
-	free(s1);
 	return (trimmed_str);
 }
 
+/*
 static int	ft_ismatch(char head, char tail)
 {
 	if (ft_isquote(head, 39) && ft_isquote(tail, 39))
@@ -59,3 +63,4 @@ static int	ft_isquote(char target, char c)
 {
 	return (target == c);
 }
+*/

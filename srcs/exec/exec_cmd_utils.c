@@ -37,10 +37,14 @@ static int	child_func(int *pipefd, int *idx, t_list_cmds *cmds)
 	{
 		out_fd = open(cmds[i].file_toappend, O_WRONLY | O_APPEND);
 		dup2(out_fd, 1);
+		close(out_fd);
 	}
 	else if (i  < count - 1)
 		dup2(pipefd[1], 1);
 	close(pipefd[1]);
+
+	if (!cmds[i].args[0])
+		return (-1);
 	if (execve(cmds[i].args[0], cmds[i].args, NULL) == -1)
 	{
 		perror(cmds[i].args[0]);
@@ -60,14 +64,15 @@ static void	parent(int *pipefd, int *prev_read, int *util)
 		close(pipefd[0]);
 }
 
-static void	cleanup_child(t_list_cmds *cmds, int status, int *vals)
+static void	cleanup_child(t_list_cmds *cmds, int *status, int *vals)
 {
-	if (status != 0)
+	if (*status == -1)
 	{
-		free_all(cmds, vals[1]);
+		*status = 0;
+		cleanup_cmd(cmds, vals[1]);
 		close(0);
 		close(1);
-		exit(status);
+		exit(0);
 	}
 }
 
@@ -81,7 +86,11 @@ static void	prepare_child_stdin(t_list_cmds cmd, int *prev_read)
 		dup2(in_fd, 0);
 		close(in_fd);
 	}
-//	else if (cmd.eof) >> 3 Janurary
+	else if (cmd.heredoc_fd != -1)
+	{
+		dup2(cmd.heredoc_fd, 0);
+		close(cmd.heredoc_fd);
+	}
 	else if (*prev_read != -1)
 	{
 		dup2(*prev_read, 0);
@@ -107,7 +116,7 @@ int	exec_cmds(t_list_cmds *cmds, int count, int (*func_ptr)(int*, int*, int*))
 		{
 			prepare_child_stdin(cmds[i], &prev_read);
 			status[1] = child_func(pipefd, (int []){i, count}, cmds);
-			cleanup_child(cmds, status[1], (int []){i, count});
+			cleanup_child(cmds, &status[1], (int []){i, count});
 		}
 		else
 			parent(pipefd, &prev_read, (int []){i, count});

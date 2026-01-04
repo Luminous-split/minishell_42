@@ -12,16 +12,6 @@
 
 #include "minishell.h"
 
-static char	**extract_path(char **envp);
-
-static char	*prefix(char *cmd, const char *prefix_dir);
-
-static void	free_path(char **path);
-
-static void	parse_path_helper(t_list_cmds *cmds, char **path, int count);
-
-void		parse_path(t_list_cmds *cmds, char **envp, int count);
-
 static char	**extract_path(char **envp)
 {
 	char	**path;
@@ -68,7 +58,7 @@ static void	free_path(char **path)
 	free(path);
 }
 
-static void	parse_path_helper(t_list_cmds *cmds, char **path, int count)
+static void	append_path(t_list_cmds *cmds, char **path, int count)
 {
 	int		i;
 	int		j;
@@ -79,7 +69,7 @@ static void	parse_path_helper(t_list_cmds *cmds, char **path, int count)
 	{
 		j = -1;
 		while (path[++j] && !(ft_strchr(cmds[i].args[0], '/'))
-			&& ft_strlen(cmds[i].args[0]))
+			&& ft_strlen(cmds[i].args[0]) && cmds[i].bltin == -1)
 		{
 			full_path = prefix(cmds[i].args[0], path[j]);
 			if (access(full_path, X_OK) < 0)
@@ -104,6 +94,7 @@ void	parse_path(t_list_cmds *cmds, char **envp, int count)
 	path = extract_path(envp);
 	if (!path)
 		return ;
-	parse_path_helper(cmds, path, count);
+	check_builtin(cmds, count);
+	append_path(cmds, path, count);
 	free_path(path);
 }

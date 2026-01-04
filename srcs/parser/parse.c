@@ -33,7 +33,8 @@ static void	info_printpipetokens(t_list_cmds *cmds, int count)
 	while (++i < count)
 	{
 		j = -1;
-		printf("\n--------------CMD: %d------------------\n", i + 1);
+		printf("\n--------------CMD: %d { Total : %d }--------\n", i + 1, count);
+		printf("Is Builtin: [%d]\n", cmds[i].bltin);
 		printf("Filename append: [%s]\n", cmds[i].file_toappend);
 		printf("Filename infile: [%s]\n", cmds[i].file_toread);
 		printf("All Eof: ");
@@ -79,25 +80,6 @@ void	*ft_realloc(void *ptr, size_t old_size, size_t new_size)
 	return (new_ptr);
 }
 
-void	free_all(t_list_cmds *cmds, int count)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	while (++i < count)
-	{
-		j = 0;
-		while (cmds[i].args[j])
-		{
-			free(cmds[i].args[j]);
-			j++;
-		}
-		free(cmds[i].args);
-	}
-	free(cmds);
-}
-
 t_list_cmds	*cmd_parse(char *line, char *delim, int *count)
 {
 	t_list_cmds	*cmds;
@@ -112,6 +94,8 @@ t_list_cmds	*cmd_parse(char *line, char *delim, int *count)
 	while (cmd_str)
 	{
 //		printf("\n%s\n", cmd_str);
+		cmd.heredoc_fd = -1;
+		cmd.bltin = -1;
 		cmd.file_toappend = NULL;
 		cmd.file_toread = NULL;
 		cmd.all_eof = NULL;
@@ -127,7 +111,7 @@ t_list_cmds	*cmd_parse(char *line, char *delim, int *count)
 	return (cmds);
 }
 
-int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp)
+int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp, int *final_count)
 {
 	int	cmd_count;
 	t_list_cmds	*temp;
@@ -135,8 +119,10 @@ int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp)
 	cmd_count = 0;
 	temp = cmd_parse(line, "|", &cmd_count);
 	parse_path(temp, envp, cmd_count);
-	rephrase_cmd(temp, cmd_count);
+	if (rephrase_cmd(temp, cmd_count) == 2)
+		return (-1);
+	*final_count = cmd_count;
 	*cmds = temp;
 	info_printpipetokens(temp, cmd_count);
-	return (cmd_count);
+	return (1);
 }

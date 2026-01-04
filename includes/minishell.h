@@ -28,6 +28,8 @@
 
 typedef struct s_list_cmds
 {
+	int	heredoc_fd;
+	int	bltin;
 	char	*file_toappend;
 	char	*file_toread;
 	char	**all_eof;
@@ -41,26 +43,29 @@ extern volatile sig_atomic_t g_signal;
 
 // parser
 t_list_cmds     *cmd_parse(char *line, char *delim, int *count);
-int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp);
+int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp, int *final_count);
 
 char	*ft_strtok(char *str, const char *delim);
 void	expand_dollar(const char *line, char *tok, char **envp, int last_status);
 char    *handle_single_quotes(const char *line, int start, char *tok);
 char    *handle_double_quotes(const char *line, int start, char **envp, int last_status);
+
+// parser utils
 void		parse_path(t_list_cmds *cmds, char **envp, int count);
 void		*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 void            free_all(t_list_cmds *cmds, int count);
 char		*next_token(char *str, char *delim);
-void		parse_cleanup(t_list_cmds *cmds, int cmd_count);
+void		cleanup_cmd(t_list_cmds *cmds, int cmd_count);
+void    	check_builtin(t_list_cmds *cmd, int cmd_count);
 
 // redir
-void	rephrase_cmd(t_list_cmds *full_cmd, int count);
+int	rephrase_cmd(t_list_cmds *full_cmd, int count);
 int	prepare_redir_append(t_list_cmds *full_cmd);
 void	prepare_redir(t_list_cmds *full_cmd);
 void	prepare_inredir(t_list_cmds *full_cmd);
 int	prepare_heredoc(t_list_cmds *full_cmd);
-void	construct_cmd(t_list_cmds *full_cmd);
-void	construct_cmd1(t_list_cmds *full_cmd);
+int	construct_cmd(t_list_cmds *full_cmd);
+int	construct_cmd1(t_list_cmds *full_cmd);
 void	update_chosen_heredoc(t_list_cmds *full_cmd);
 void	handle_one_heredoc(t_list_cmds *full_cmd, int count);
 
@@ -82,7 +87,7 @@ int     exec_cmds(t_list_cmds *cmds, int count,
 		int (*func_ptr)(int*, int*, int*));
 int	exec_and_get_status(t_list_cmds *cmds, int cmd_count);
 int	run_binary(char **args, char **envp);
-
+int	read_heredoc(char *eof);
 // built-in cmds
 int		ft_echo(char **args);
 int		ft_pwd(void);

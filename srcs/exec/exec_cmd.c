@@ -51,5 +51,6 @@ int	exec_and_get_status(t_list_cmds *cmds, int cmd_count)
 	if (exit_status)
 		return (1);
 	exit_status = exec_cmds(cmds, cmd_count, (int (*)(int*, int*, int*))init_values);
+	cleanup_cmd(cmds, cmd_count);
 	return (exit_status);
 }
