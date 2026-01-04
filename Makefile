@@ -23,6 +23,11 @@ SRCS = srcs/main.c \
        srcs/parser/parse_utils.c \
        srcs/parser/parse_utils1.c \
        srcs/parser/parse_builtin.c \
+       srcs/unpacker/dollar.c \
+       srcs/unpacker/unquoted.c \
+       srcs/unpacker/handle_single_quotes.c \
+       srcs/unpacker/handle_double_quotes.c \
+       srcs/unpacker/unpack_token.c \
        srcs/error/redir_error.c \
        srcs/redirections/file_handle.c \
        srcs/redirections/redirect.c \

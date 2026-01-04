@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/02 15:12:08 by soemin            #+#    #+#             */
-/*   Updated: 2026/01/04 14:41:09 by soemin           ###   ########.fr       */
+/*   Updated: 2026/01/04 16:52:36 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -32,7 +32,7 @@ int	append_char(char **tok, char c)
 	return (0);
 }
 
-int	append_str(char **tok, size_t *len, const char *s)
+int	append_str(char **tok, const char *s)
 {
 	size_t	s_len;
 	size_t len;
@@ -40,8 +40,8 @@ int	append_str(char **tok, size_t *len, const char *s)
 
 	if (!s)
 		return (0);
-	if (*tok)
-		len = ft_strlen(*tok);
+	if (tok)
+		len = ft_strlen(tok);
 	else
 		len = 0;
 	s_len = ft_strlen(s);

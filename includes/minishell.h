@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 20:29:19 by soemin            #+#    #+#             */
-/*   Updated: 2025/11/23 17:21:36 by soemin           ###   ########.fr       */
+/*   Updated: 2026/01/04 17:02:38 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,13 @@ t_list_cmds     *cmd_parse(char *line, char *delim, int *count);
 int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp, int **cnt_lst);
 
 char	*ft_strtok(char *str, const char *delim);
-void	expand_dollar(const char *line, char *tok, char **envp, int last_status);
-char    *handle_single_quotes(const char *line, int start, char *tok);
-char    *handle_double_quotes(const char *line, int start, char **envp, int last_status);
+char	*expand_dollar(const char *line, char **envp, int last_status);
+int	unquoted(char **tok, char *buf);
+char    *handle_single_quotes(const char *line, int i, char *tok);
+char    *handle_double_quotes(const char *line, int i, char **envp, int last_status);
+int	append_char(char **tok, char c);
+int	append_str(char **tok, size_t *len, const char *s);
+char    *unpack_token(char *line, char **envp, int last_status);
 
 // parser utils
 void		parse_path(t_list_cmds *cmds, char **envp, int count);

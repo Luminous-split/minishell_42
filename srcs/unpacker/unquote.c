@@ -1,16 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unpack_token.c                                     :+:      :+:    :+:   */
+/*   unquote.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/04 15:48:25 by soemin            #+#    #+#             */
-/*   Updated: 2026/01/04 15:48:55 by soemin           ###   ########.fr       */
+/*   Created: 2026/01/04 14:59:38 by soemin            #+#    #+#             */
+/*   Updated: 2026/01/04 16:19:38 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "minishell.h"
 
-char	*unpack_token(char *line, char **envp, int last_status)
+int	unquoted(char **tok, char *buf)
 {
+	if (!part)
+		return (-1);
+	if (append_str(tok, buf) == -1)
+	{
+		free(buf);
+		return (-1);
+	}
+	free(buf);
+	return (0);
+}
