@@ -23,6 +23,6 @@ Brief overview of minishell; Parsing, Expansion, Child and Parent Process Manage
   exit with no options
 
 ### Resources
-Stack Overflow
-Linux Manual
+Stack Overflow\n
+Linux Manual\n
 AI was used when we have any doubts needed to be clarified regarding the outputs or logic flow.
