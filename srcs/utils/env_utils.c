@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 16:26:34 by soemin            #+#    #+#             */
-/*   Updated: 2025/11/23 18:32:24 by soemin           ###   ########.fr       */
+/*   Updated: 2026/01/06 15:24:31 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -19,7 +19,8 @@ static int	append_env(char ***envp, char *new_entry)
 	count = 0;
 	while ((*envp)[count])
 		count++;
-	tmp = realloc(*envp, sizeof(char *) * (count + 2));
+	tmp = ft_realloc(*envp, sizeof(char *) * count,
+			sizeof(char *) * (count + 2));
 	if (!tmp)
 	{
 		free(new_entry);
@@ -110,6 +111,7 @@ char	**dup_env(char **envp)
 			free(cpy);
 			return (NULL);
 		}
+		i++;
 	}
 	cpy[count] = NULL;
 	return (cpy);

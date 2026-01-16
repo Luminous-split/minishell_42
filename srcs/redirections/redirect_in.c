@@ -66,6 +66,8 @@ static void	append_token(char **new_cmd, int *i, char *str)
 	{
 		if (ft_strlen(token))
 			new_cmd[(*i)++] = token;
+		else
+			free(token);
 		token = next_token(NULL, "<");
 		if (token)
 			new_cmd[(*i)++] = ft_strdup("<");
@@ -120,7 +122,7 @@ void	prepare_inredir(t_list_cmds *full_cmd)
 	if (redir)
 	{
 		temp = expand_nested(full_cmd->args, old_count);
-		free(full_cmd->args);
+		free_arg(full_cmd->args);
 		full_cmd->args = temp;
 	}
 	return ;

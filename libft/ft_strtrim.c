@@ -22,6 +22,7 @@ static int	ft_isset(char c, char const *set)
 	}
 	return (0);
 }
+
 char	*ft_strtrim(char *s1, char *set)
 {
 	size_t	s1_len;

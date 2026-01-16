@@ -47,10 +47,10 @@ int	ft_echo(char **args)
 	{
 		write(1, args[i], ft_strlen(args[i]));
 		if (args[i + 1])
-			printf(" ");
+			write(1, " ", 1);
 		i++;
 	}
 	if (!n_flag)
-		printf("\n");
+		write(1, "\n", 1);
 	return (0);
 }

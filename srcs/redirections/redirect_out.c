@@ -66,6 +66,8 @@ static void	append_token(char **new_cmd, int *i, char *str)
 	{
 		if (ft_strlen(token))
 			new_cmd[(*i)++] = token;
+		else
+			free(token);
 		token = next_token(NULL, ">");
 		if (token)
 			new_cmd[(*i)++] = ft_strdup(">");

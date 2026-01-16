@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 18:58:18 by soemin            #+#    #+#             */
-/*   Updated: 2025/10/02 13:51:50 by soemin           ###   ########.fr       */
+/*   Updated: 2026/01/11 18:50:33 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -78,7 +78,7 @@ int	ft_unset(char **args, char ***envp)
 	int	status;
 
 	if (!args || !args[1])
-		return (1);
+		return (0);
 	k = 1;
 	status = 0;
 	while (args[k])

@@ -6,99 +6,103 @@
 /*   By: ksan <ksan@student.42.sg>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 13:08:54 by ksan              #+#    #+#             */
-/*   Updated: 2026/01/01 17:32:36 by ksan             ###   ########.sg       */
+/*   Updated: 2026/01/13 17:08:10 by ksan             ###   ########.sg       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	get_exitcode(int err_no)
+static int	run(t_list_cmds cmd, char ***ep, int last_status)
 {
-	if (err_no == ENOENT)
-		return (127);
-	else if (err_no == EACCES || err_no == EISDIR || err_no == ENOEXEC
-		|| err_no == ETXTBSY || err_no == ELOOP || err_no == ENAMETOOLONG
-		|| err_no == ENOTDIR)
-		return (126);
+	int	code;
+
+	code = 0;
+	if (strncmp(cmd.args[0], "exit", 4) == 0 && cmd.args[0][4] == '\0')
+	{
+		code = ft_exit(&cmd, ep, (int []){last_status, 1}, 0);
+		return (code);
+	}
+	else if (cmd.bltin == 1)
+		return (run_builtin(&cmd, ep, last_status, 0));
+	else if (execve(cmd.args[0], cmd.args, *ep) == -1)
+		return (get_exitcode(cmd.args[0], errno));
 	else
-		return (1);
+		return (0);
 }
 
-static int	child_func(int *pipefd, int *idx, t_list_cmds *cmds)
+static int	child_func(int *pipefd, char ***ep, int *i_c_ls, t_list_cmds *cmds)
 {
 	int	i;
 	int	count;
 	int	out_fd;
 
-	i = idx[0];
-	count = idx[1];
+	i = i_c_ls[0];
+	count = i_c_ls[1];
 	close(pipefd[0]);
 	if (cmds[i].file_toappend)
 	{
-		out_fd = open(cmds[i].file_toappend, O_WRONLY | O_APPEND);
+		if (cmds[i].f_out != NULL)
+		{
+			close(pipefd[1]);
+			return (read_file_error(cmds[i].f_out));
+		}
+		out_fd = open(cmds[i].file_toappend,
+				O_WRONLY | O_APPEND | O_CREAT, 0644);
 		dup2(out_fd, 1);
 		close(out_fd);
 	}
-	else if (i  < count - 1)
+	else if (i < count - 1)
 		dup2(pipefd[1], 1);
 	close(pipefd[1]);
-
 	if (!cmds[i].args[0])
 		return (-1);
-	if (execve(cmds[i].args[0], cmds[i].args, NULL) == -1)
-	{
-		perror(cmds[i].args[0]);
-		return (get_exitcode(errno));
-	}
-	return (0);
+	return (run(cmds[i], ep, i_c_ls[2]));
 }
 
 static void	parent(int *pipefd, int *prev_read, int *util)
 {
-	close(pipefd[1]);
+	if (pipefd[1] != -1)
+	{
+		close(pipefd[1]);
+		pipefd[1] = -1;
+	}
 	if (*prev_read != -1)
 		close(*prev_read);
 	if (util[0] < util[1] - 1)
 		*prev_read = pipefd[0];
 	else
+	{
 		close(pipefd[0]);
+		*prev_read = -1;
+	}
 }
 
-static void	cleanup_child(t_list_cmds *cmds, int *status, int *vals)
+static int	start_child(t_list_cmds *cmds, char ***ep, int *pipefd, int *vars[])
 {
-	if (*status == -1)
+	int	status;
+	int	i;
+	int	*prev_read;
+
+	status = 0;
+	i = *(vars[1]);
+	prev_read = vars[0];
+	if (*(cmds->hd_canceled))
 	{
-		*status = 0;
-		cleanup_cmd(cmds, vals[1]);
-		close(0);
-		close(1);
-		exit(0);
+		status = 130;
+		close(pipefd[0]);
+		close(pipefd[1]);
 	}
+	else
+		status = prepare_child_stdin(&cmds[i], prev_read, pipefd);
+	if (status != 1 && status != 130)
+		status = child_func(pipefd, ep,
+				(int []){i, vars[2][0], vars[2][1]}, cmds);
+	cleanup_child(cmds, &status, ep, (int []){i, vars[2][0]});
+	return (status);
 }
 
-static void	prepare_child_stdin(t_list_cmds cmd, int *prev_read)
-{
-	int	in_fd;
-
-	if (cmd.file_toread)
-	{
-		in_fd = open(cmd.file_toread, O_RDONLY);
-		dup2(in_fd, 0);
-		close(in_fd);
-	}
-	else if (cmd.heredoc_fd != -1)
-	{
-		dup2(cmd.heredoc_fd, 0);
-		close(cmd.heredoc_fd);
-	}
-	else if (*prev_read != -1)
-	{
-		dup2(*prev_read, 0);
-		close(*prev_read);
-	}
-}
-
-int	exec_cmds(t_list_cmds *cmds, int count, int (*func_ptr)(int*, int*, int*))
+int	exec_cmds(t_list_cmds *cmds, char ***ep, int *c_ls,
+	int (*func_ptr)(int*, int*, int*))
 {
 	int	i;
 	int	pipefd[2];
@@ -108,20 +112,20 @@ int	exec_cmds(t_list_cmds *cmds, int count, int (*func_ptr)(int*, int*, int*))
 
 	func_ptr(status, &pid, &i);
 	prev_read = -1;
-	while (++i < count)
+	while (++i < c_ls[0])
 	{
 		pipe(pipefd);
 		pid = fork();
+		setup_child_signals();
 		if (pid == 0)
-		{
-			prepare_child_stdin(cmds[i], &prev_read);
-			status[1] = child_func(pipefd, (int []){i, count}, cmds);
-			cleanup_child(cmds, &status[1], (int []){i, count});
-		}
+			status[1] = start_child(cmds, ep, pipefd,
+					(int *[]){&prev_read, &i, c_ls});
 		else
-			parent(pipefd, &prev_read, (int []){i, count});
+			parent(pipefd, &prev_read, (int []){i, c_ls[0]});
+		signal(SIGINT, SIG_IGN);
 	}
 	while (waitpid(pid, &status[0], 0) > 0)
 		continue ;
+	setup_signals();
 	return (WEXITSTATUS(status[0]));
 }

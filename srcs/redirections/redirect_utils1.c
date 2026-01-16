@@ -24,28 +24,34 @@ int	get_cmdlet_count(char **cmd_arr)
 
 int	is_redir_char(char *arg)
 {
-	if (ft_strncmp(arg, ">", 1) == 0 && ft_strlen(arg) == 1)
+	if (ft_strlen(arg) == 1 && ft_strncmp(arg, ">", 1) == 0)
 		return (1);
 	return (0);
 }
 
 int	is_append_char(char *arg)
 {
-	if (ft_strncmp(arg, ">>", 2) == 0 && ft_strlen(arg) == 2)
+	if (!arg)
+		return (0);
+	if (ft_strlen(arg) == 2 && ft_strncmp(arg, ">>", 2) == 0)
 		return (1);
 	return (0);
 }
 
 int	is_inredirect_char(char *arg)
 {
-	if (ft_strncmp(arg, "<", 1) == 0 && ft_strlen(arg) == 1)
+	if (!arg)
+		return (0);
+	if (ft_strlen(arg) == 1 && ft_strncmp(arg, "<", 1) == 0)
 		return (1);
 	return (0);
 }
 
 int	is_heredoc_char(char *arg)
 {
-	if (ft_strncmp(arg, "<<", 2) == 0 && ft_strlen(arg) == 2)
+	if (!arg)
+		return (0);
+	if (ft_strlen(arg) == 2 && ft_strncmp(arg, "<<", 2) == 0)
 		return (1);
 	return (0);
 }

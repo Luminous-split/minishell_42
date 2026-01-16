@@ -46,16 +46,13 @@ static char	*prefix(char *cmd, const char *prefix_dir)
 	return (out);
 }
 
-static void	free_path(char **path)
+static int	valid(t_list_cmds *cmd, int i)
 {
-	int	i;
-
-	i = -1;
-	while (path[++i])
-	{
-		free(path[i]);
-	}
-	free(path);
+	if (ft_strlen(cmd[i].args[0])
+		&& !(ft_strchr(cmd[i].args[0], '/'))
+		&& cmd[i].bltin == -1)
+		return (1);
+	return (0);
 }
 
 static void	append_path(t_list_cmds *cmds, char **path, int count)
@@ -68,8 +65,7 @@ static void	append_path(t_list_cmds *cmds, char **path, int count)
 	while (++i < count)
 	{
 		j = -1;
-		while (path[++j] && !(ft_strchr(cmds[i].args[0], '/'))
-			&& ft_strlen(cmds[i].args[0]) && cmds[i].bltin == -1)
+		while (path[++j] && valid(cmds, i))
 		{
 			full_path = prefix(cmds[i].args[0], path[j]);
 			if (access(full_path, X_OK) < 0)
@@ -89,12 +85,18 @@ static void	append_path(t_list_cmds *cmds, char **path, int count)
 
 void	parse_path(t_list_cmds *cmds, char **envp, int count)
 {
+	int		i;
 	char	**path;
 
 	path = extract_path(envp);
+	check_builtin(cmds, count);
 	if (!path)
 		return ;
-	check_builtin(cmds, count);
 	append_path(cmds, path, count);
-	free_path(path);
+	i = -1;
+	while (path[++i])
+	{
+		free(path[i]);
+	}
+	free(path);
 }

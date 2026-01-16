@@ -12,24 +12,50 @@
 
 #include "minishell.h"
 
-static void	clean_eof(t_list_cmds cmd)
+static void	clean_vars(t_list_cmds *cmd)
 {
-	int	i;
-
-	i = -1;
-	while (cmd.all_eof[++i])
-		free(cmd.all_eof[i]);
-	free(cmd.all_eof);
+	if (cmd->file_toappend)
+		free(cmd->file_toappend);
+	if (cmd->f_out)
+		free(cmd->f_out);
+	if (cmd->heredoc_fd != -1)
+		close(cmd->heredoc_fd);
+	if (cmd->file_toread)
+	{
+		free(cmd->file_toread);
+		cmd->file_toread = NULL;
+	}
+	if (cmd->eof)
+	{
+		free(cmd->eof);
+		cmd->eof = NULL;
+	}
 }
 
-static void	clean_args(t_list_cmds cmd)
+static void	clean_eof(t_list_cmds *cmd)
 {
 	int	i;
 
 	i = -1;
-	while (cmd.args[++i])
-		free(cmd.args[i]);
-	free(cmd.args);
+	if (cmd->all_eof)
+	{
+		while (cmd->all_eof[++i])
+			free(cmd->all_eof[i]);
+		free(cmd->all_eof);
+	}
+}
+
+static void	clean_args(t_list_cmds *cmd)
+{
+	int	i;
+
+	i = -1;
+	if (cmd->args)
+	{
+		while (cmd->args[++i])
+			free(cmd->args[i]);
+		free(cmd->args);
+	}
 }
 
 void	cleanup_cmd(t_list_cmds *cmds, int cmd_count)
@@ -39,22 +65,15 @@ void	cleanup_cmd(t_list_cmds *cmds, int cmd_count)
 	if (!cmds)
 		return ;
 	i = -1;
+	free(cmds->hd_canceled);
+	cmds->hd_canceled = NULL;
 	while (++i < cmd_count)
 	{
-		if (cmds[i].file_toappend)
-			free(cmds[i].file_toappend);
-		if (cmds[i].file_toread)
-			free(cmds[i].file_toread);
-		if (cmds[i].eof)
-		{
-			free(cmds[i].eof);
-			cmds[i].eof = NULL;
-		}
-		if (cmds[i].all_eof)
-			clean_eof(cmds[i]);
-		if (cmds[i].args)
-			clean_args(cmds[i]);
+		clean_vars(&cmds[i]);
+		clean_eof(&cmds[i]);
+		clean_args(&cmds[i]);
 	}
-	free(cmds);
+	if (cmds)
+		free(cmds);
 	cmds = NULL;
 }

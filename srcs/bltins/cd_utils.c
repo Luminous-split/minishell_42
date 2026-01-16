@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 18:42:22 by soemin            #+#    #+#             */
-/*   Updated: 2025/10/02 13:44:25 by soemin           ###   ########.fr       */
+/*   Updated: 2026/01/11 19:02:34 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	set_env_var(char **env, const char *name, const char *value)
 			ft_strlcpy(updated_var, name, total_len);
 			ft_strlcat(updated_var, "=", total_len);
 			ft_strlcat(updated_var, value, total_len);
+			free(env[i]);
 			env[i] = updated_var;
 			return ;
 		}

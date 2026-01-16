@@ -6,12 +6,13 @@
 /*   By: ksan <ksan@student.42.sg>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/29 16:34:46 by ksan              #+#    #+#             */
-/*   Updated: 2025/10/02 18:54:53 by ksan             ###   ########.sg       */
+/*   Updated: 2026/01/16 13:15:17 by ksan             ###   ########.sg       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
 static void	print_args(char **args)
 {
 	int	i;
@@ -36,6 +37,7 @@ static void	info_printpipetokens(t_list_cmds *cmds, int count)
 		printf("\n--------------CMD: %d { Total : %d }--------\n", i + 1, count);
 		printf("Is Builtin: [%d]\n", cmds[i].bltin);
 		printf("Filename append: [%s]\n", cmds[i].file_toappend);
+		printf("Filename redir out failed: [%s]\n", cmds[i].f_out);
 		printf("Filename infile: [%s]\n", cmds[i].file_toread);
 		printf("All Eof: ");
 		if (cmds[i].all_eof != NULL)
@@ -54,7 +56,7 @@ static void	info_printpipetokens(t_list_cmds *cmds, int count)
 		printf("\nvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv\n");
 	}
 }
-
+*/
 
 void	*ft_realloc(void *ptr, size_t old_size, size_t new_size)
 {
@@ -80,27 +82,41 @@ void	*ft_realloc(void *ptr, size_t old_size, size_t new_size)
 	return (new_ptr);
 }
 
-t_list_cmds	*cmd_parse(char *line, char *delim, int *count)
+static void	init_vals(t_list_cmds *cmd, char *cmd_str, int *fl)
 {
-	t_list_cmds	*cmds;
-	t_list_cmds	cmd;
+	cmd->hd_canceled = fl;
+	cmd->heredoc_fd = -1;
+	cmd->bltin = -1;
+	cmd->f_in = 0;
+	cmd->f_out = NULL;
+	cmd->file_toappend = NULL;
+	cmd->file_toread = NULL;
+	cmd->all_eof = NULL;
+	cmd->eof = NULL;
+	cmd->args = split_line(cmd_str, ' ');
+	if (cmd->args[0] == NULL)
+	{
+		free(cmd->args);
+		cmd->args = malloc(sizeof(char *) * 2);
+		cmd->args[0] = ft_strdup("");
+		cmd->args[1] = NULL;
+	}
+}
+
+t_list_cmds	*cmd_parse(char *line, char *delim, int *count, int *fl)
+{
 	int			next_size;
 	int			cmd_count;
-	char			*cmd_str;
+	char		*cmd_str;
+	t_list_cmds	*cmds;
+	t_list_cmds	cmd;
 
 	cmds = NULL;
 	cmd_count = 0;
 	cmd_str = next_token(line, delim);
 	while (cmd_str)
 	{
-//		printf("\n%s\n", cmd_str);
-		cmd.heredoc_fd = -1;
-		cmd.bltin = -1;
-		cmd.file_toappend = NULL;
-		cmd.file_toread = NULL;
-		cmd.all_eof = NULL;
-		cmd.eof = NULL;
-		cmd.args = ft_split(cmd_str, ' '); //split and unpack
+		init_vals(&cmd, cmd_str, fl);
 		next_size = (cmd_count + 1) * sizeof(t_list_cmds);
 		cmds = ft_realloc(cmds, (cmd_count) * sizeof(t_list_cmds), next_size);
 		cmds[cmd_count++] = cmd;
@@ -111,18 +127,20 @@ t_list_cmds	*cmd_parse(char *line, char *delim, int *count)
 	return (cmds);
 }
 
-int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp, int **cnt_lst)
+int	prepare_cmds(t_list_cmds **cmds, char *line, char **envp, int *vars)
 {
-	int	cmd_count;
+	int			cmd_count;
+	int			*is_canceled;
 	t_list_cmds	*temp;
 
 	cmd_count = 0;
-	temp = cmd_parse(line, "|", &cmd_count);
-	parse_path(temp, envp, cmd_count);
-	if (rephrase_cmd(temp, cmd_count, envp, *(cnt_lst[1])) == 2)
+	is_canceled = malloc(sizeof(int) * 1);
+	*is_canceled = 0;
+	temp = cmd_parse(line, "|", &cmd_count, is_canceled);
+	if (rephrase_cmd(temp, cmd_count, envp, vars) == 2)
 		return (-1);
-	*(cnt_lst[0]) = cmd_count;
+	parse_path(temp, envp, cmd_count);
+	vars[1] = cmd_count;
 	*cmds = temp;
-	info_printpipetokens(temp, cmd_count);
 	return (1);
 }

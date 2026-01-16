@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 18:33:25 by soemin            #+#    #+#             */
-/*   Updated: 2025/10/02 12:31:15 by soemin           ###   ########.fr       */
+/*   Updated: 2026/01/12 12:53:30 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,13 @@ static int	validate_exit_args(char **args, int last_status, int *code)
 	}
 	if (!is_num(args[1]))
 	{
+		write(2, "minishell: exit: numeric argument required\n", 43);
 		*code = 2;
 		return (1);
 	}
 	if (args[2])
 	{
-		printf("minshell: exit: too many arguments\n");
+		write(2, "minshell: exit: too many arguments\n", 36);
 		return (0);
 	}
 	*code = parse_exit_code(args[1], &valid);
@@ -68,11 +69,15 @@ static int	validate_exit_args(char **args, int last_status, int *code)
 	return (1);
 }
 
-int	ft_exit(char **args, int last_status)
+int	ft_exit(t_list_cmds *cmd, char ***ep, int *vars, int track_fds)
 {
 	int	code;
+	int	i;
 
-	if (!validate_exit_args(args, last_status, &code))
+	i = -1;
+	if (!validate_exit_args(cmd->args, vars[0], &code))
 		return (1);
+	write(2, "exit\n", 5);
+	exit_cleanup_vars(cmd, ep, track_fds);
 	exit(code);
 }

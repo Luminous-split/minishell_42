@@ -27,9 +27,10 @@ static int	get_count_inredir(t_list_cmds *full_cmd, int count)
 			i++;
 		else if (is_inredirect_char(full_cmd->args[i]))
 		{
-			if (!check_file_inredir(full_cmd->args[++i]))
-				return (-1);
-			temp_name = full_cmd->args[i];
+			if (!full_cmd->f_in)
+				temp_name = full_cmd->args[++i];
+			if (!check_file_inredir(full_cmd->args[i]))
+				full_cmd->f_in = 1;
 			to_reduce++;
 		}
 	}
@@ -119,15 +120,6 @@ int	construct_cmd1(t_list_cmds *full_cmd)
 	if (count == -1)
 		return (-1);
 	new_count = get_count_heredoc(full_cmd, count);
-	if (new_count < count)
-	{
-		if (new_count == count - 2)
-			handle_one_heredoc(full_cmd, count);
-		else
-			update_chosen_heredoc(full_cmd);
-	}
-	if (get_count_inredir(full_cmd, count) == -1)
-		return (-1);
 	new_count = new_count - get_count_inredir(full_cmd, count);
 	final_cmd(full_cmd, count, new_count);
 	return (1);

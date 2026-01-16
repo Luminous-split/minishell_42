@@ -14,42 +14,48 @@
 
 int	check_file_inredir(char *file_name)
 {
-	if (open(file_name, O_RDONLY) < 0)
-	{
-		perror(file_name);
-		return (0);
-	}
-	else
-		return (1);
-}
-
-int	handle_file(char *file_name, int is_append)
-{
-	int	check_fd;
 	int	fd;
 
+	fd = open(file_name, O_RDONLY);
+	if (fd == -1)
+		return (0);
+	close(fd);
+	return (1);
+}
+
+static void	fd_cleanup(int *fd, int *check_fd)
+{
+	if (*fd >= 0)
+		close(*fd);
+	if (*check_fd >= 0)
+		close(*check_fd);
+}
+
+int	handle_file(t_list_cmds *cmd, int i)
+{
+	int		check_fd;
+	int		fd;
+	char	*file_name;
+
+	file_name = cmd->args[i];
+	if (ft_strlen(file_name) == 0)
+		return (-1);
 	check_fd = open(file_name, O_WRONLY);
 	if (check_fd < 0)
 	{
-		if (errno == ENOENT)
+		if (errno == ENOENT && !(cmd->f_in))
 		{
 			fd = open(file_name, O_WRONLY | O_CREAT, 0644);
 			close(fd);
-			return (1);
+			return (0);
 		}
 		else
-		{
-			perror(file_name);
 			return (-1);
-		}
 	}
-	else if (is_append)
+	else if (is_append_char(cmd->args[i - 1]))
 		fd = open(file_name, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	else
 		fd = open(file_name, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	if (fd >= 0)
-		close(fd);
-	if (check_fd >= 0)
-		close(check_fd);
-	return (1);
+	fd_cleanup(&fd, &check_fd);
+	return (0);
 }

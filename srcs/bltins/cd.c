@@ -6,7 +6,7 @@
 /*   By: soemin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/22 18:42:16 by soemin            #+#    #+#             */
-/*   Updated: 2025/11/23 17:03:21 by soemin           ###   ########.fr       */
+/*   Updated: 2026/01/12 12:52:42 by soemin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ static char	*get_cd_target(char **args, int ac, char **env)
 {
 	char	*target;
 
+	if (ac == 1)
+		return (get_env_var(env, "HOME"));
 	target = tilde_and_dash(args, ac, env);
 	if (target)
 		return (target);
@@ -74,8 +76,12 @@ static int	cd_and_set_env(const char *target, char **env, const char *prev_dir)
 
 	if (chdir(target) != 0)
 	{
-		printf("cd: %s: %s\n", target, strerror(errno));
-		return (0);
+		ft_putstr_fd("minishell: cd: ", 2);
+		ft_putstr_fd((char *)target, 2);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("\n", 2);
+		return (1);
 	}
 	if (getcwd(cwd, sizeof(cwd)))
 	{
@@ -85,9 +91,9 @@ static int	cd_and_set_env(const char *target, char **env, const char *prev_dir)
 	else
 	{
 		perror("cd: getcwd");
-		return (0);
+		return (1);
 	}
-	return (1);
+	return (0);
 }
 
 int	ft_cd(char **args, char **envp)
@@ -99,16 +105,16 @@ int	ft_cd(char **args, char **envp)
 	ac = count_args(args);
 	if (ac > 2)
 	{
-		printf("cd: too many arguments\n");
-		return (0);
+		write(2, "minishell: cd: too many arguments\n", 34);
+		return (1);
 	}
 	if (!getcwd(prev_dir, sizeof(prev_dir)))
 	{
 		perror("cd: getcwd");
-		return (0);
+		return (1);
 	}
 	target = get_cd_target(args, ac, envp);
 	if (!target)
-		return (0);
+		return (1);
 	return (cd_and_set_env(target, envp, prev_dir));
 }

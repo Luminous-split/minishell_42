@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static int	get_count(char **args, int count)
+static int	get_count(t_list_cmds *cmd, int count)
 {
 	int	new_count;
 	int	succeed;
@@ -23,16 +23,20 @@ static int	get_count(char **args, int count)
 	new_count = 0;
 	while (++i < count)
 	{
-		if (is_append_char(args[i]) || is_redir_char(args[i]))
+		if (is_append_char(cmd->args[i]) || is_redir_char(cmd->args[i]))
 		{
 			i++;
-			succeed = handle_file(args[i], is_append_char(args[i - 1]));
-			if (succeed == -1)
-				return (succeed);
+			if (succeed == 0)
+			{
+				succeed = handle_file(cmd, i);
+				if (succeed == -1)
+					cmd->f_out = ft_strdup(cmd->args[i]);
+			}
 		}
 		else
 			new_count++;
 	}
+	update_outfile(cmd, count);
 	return (new_count);
 }
 
@@ -75,10 +79,6 @@ static void	final_cmd(t_list_cmds *full_cmd, int old_count, int new_count)
 			new_cmd[new_i++] = ft_strdup(full_cmd->args[i]);
 	}
 	new_cmd[new_count] = NULL;
-	if (old_count > 1 && is_append_char(full_cmd->args[old_count - 2]))
-		full_cmd->file_toappend = ft_strdup(full_cmd->args[i - 1]);
-	else if (old_count > 1 && is_redir_char(full_cmd->args[old_count - 2]))
-		full_cmd->file_toappend = ft_strdup(full_cmd->args[i - 1]);
 	free_arg(full_cmd->args);
 	full_cmd->args = new_cmd;
 }
@@ -93,9 +93,7 @@ int	construct_cmd(t_list_cmds *full_cmd)
 	count = check_validity(full_cmd);
 	if (count == -1)
 		return (-1);
-	new_count = get_count(full_cmd->args, count);
-	if (new_count == -1)
-		return (-1);
+	new_count = get_count(full_cmd, count);
 	final_cmd(full_cmd, count, new_count);
 	return (1);
 }
